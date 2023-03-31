@@ -245,5 +245,8 @@ interceptors:
     - key: "loggingStyle"
       value: "obiWan"
 ```
+# License
+
+This project is licensed under the [Conduktor Community License](https://www.conduktor.io/conduktor-community-license-agreement-v1.0).
 
 
