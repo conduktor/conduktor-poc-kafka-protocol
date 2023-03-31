@@ -1,0 +1,10 @@
+kafkaSelector:
+  type: file
+  path: gateway-core/config/kafka.config
+interceptors:
+  - name: loggingInterceptor
+    pluginClass: io.conduktor.example.loggerinterceptor.LoggerInterceptorPlugin
+    priority: 100
+    config:
+      - key: "loggingStyle"
+        value: "obiWan"

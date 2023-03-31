@@ -1,0 +1,14 @@
+company:
+  name: company name
+  address:
+    street: abc
+    phone: 123456
+  staff:
+    - name: abc
+      age: 12
+    - name: xyz
+      age: 120
+global: this is global value
+endpoint:
+  host: localhost
+empty: ~

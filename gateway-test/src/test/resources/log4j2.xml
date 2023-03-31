@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="error" packages="org.apache.logging.log4j.core">
+    <appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%red{%10.25t}] [%green{%-5p}] [%blue{%c{1}:%L}] - %m%n"/>
+        </Console>
+    </appenders>
+
+    <loggers>
+        <logger name="io.conduktor" level="warn" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="io.conduktor.gateway.authorization" level="error" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="io.conduktor.gateway.rebuilder.components" level="warn" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="org.testcontainers" level="error" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="io.netty" level="error" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="com.github.dockerjava.zerodep" level="error" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="io.vertx" level="error" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="org.apache.kafka" level="error" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="io.kcache" level="error" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="io.micrometer" level="error" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="io.conduktor.gateway.integration" level="error" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <root level="error">
+            <appender-ref ref="Console"/>
+        </root>
+    </loggers>
+</configuration>

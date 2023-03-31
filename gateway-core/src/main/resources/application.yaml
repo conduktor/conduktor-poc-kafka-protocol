@@ -1,0 +1,35 @@
+kafkaSelector:
+  type: env
+  prefix: KAFKA_
+hostPortConfiguration:
+  gatewayBindHost: ${GATEWAY_BIND_HOST|0.0.0.0}
+  gatewayHost: ${GATEWAY_HOST|localhost}
+  portRange: ${GATEWAY_PORT_RANGE|6969:6975}
+  gatewayPort: ${GATEWAY_PORT|6969}
+  hostPrefix: ${GATEWAY_HOST_PREFIX|broker}
+routing: ${ROUTING_MECHANISM|port}
+authenticationConfig:
+  #-----------current values NONE, SSL-----------##
+  authenticatorType: ${AUTHENTICATION_AUTHENTICATOR_TYPE|NONE}
+  userPool: ${AUTHENTICATION_USERPOOL}
+  sslConfig:
+    updateContextIntervalMinutes: ${SSL_UPDATE_CONTEXT_INTERVAL_MINUTES|600000}
+    keyStore:
+      keyStorePath: ${SSL_KEY_STORE_PATH}
+      keyStorePassword: ${SSL_KEY_STORE_PASSWORD}
+      keyPassword: ${SSL_KEY_PASSWORD}
+      keyStoreType: ${SSL_KEY_TYPE|jks}
+      updateIntervalMsecs: ${SSL_UPDATE_INTERVAL_MS|600000}
+threadConfig:
+  downStreamThread: ${DOWNSTREAM_THREAD|2}
+  upstream:
+    numberOfThread: ${UPSTREAM_THREAD|4}
+    maxPendingTask: ${UPSTREAM_MAX_PENDING_TASK | 2048}
+#-----------the maximum period the gateway will store request state if a response is not received-----------##
+maxResponseLatency: ${MAX_RESPONSE_LATENCY|3000}
+#-----------maximum time the gateway will maintain an inflight request-----------##
+inFlightRequestExpiryMs: ${INFLIGHT_REQUEST_EXPIRY_MS|30000}
+upstreamConnectionConfig:
+  numOfConnection: ${UPSTREAM_NUM_CONNECTION|10}
+  #-----------max idle time of connection from gateway to kafka server, if exceeded, the connection got killed.-----------##
+  maxIdleTimeMs: ${UPSTREAM_MAX_IDLE_TIME_MS|200000}

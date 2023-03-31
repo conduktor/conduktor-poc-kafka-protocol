@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="warn" packages="org.apache.logging.log4j.core">
+
+    <Properties>
+        <Property name="LOG4J2_APPENDER_LAYOUT">pattern</Property>
+    </Properties>
+
+    <appenders>
+        <Console name="json" target="SYSTEM_OUT">
+            <JsonLayout complete="false" compact="true" eventEol="true" properties="true"
+                        objectMessageAsJsonObject="true">
+                <KeyValuePair key="timestamp" value="$${date:yyyy-MM-dd'T'HH:mm:ss.SSSZ}"/>
+            </JsonLayout>
+        </Console>
+        <Console name="pattern" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%red{%10.25t}] [%green{%-5p}] [%blue{%c{1}:%L}] - %m%n"/>
+        </Console>
+    </appenders>
+
+    <loggers>
+        <logger name="org.apache.kafka" level="warn" additivity="false">
+            <appender-ref ref="${env:LOG4J2_APPENDER_LAYOUT}"/>
+        </logger>
+        <logger name="io.kcache" level="warn" additivity="false">
+            <appender-ref ref="${env:LOG4J2_APPENDER_LAYOUT}"/>
+        </logger>
+        <logger name="io.vertx" level="warn" additivity="false">
+            <appender-ref ref="${env:LOG4J2_APPENDER_LAYOUT}"/>
+        </logger>
+        <logger name="io.netty" level="error" additivity="false">
+            <appender-ref ref="${env:LOG4J2_APPENDER_LAYOUT}"/>
+        </logger>
+
+        <logger name="io.conduktor" level="info" additivity="false">
+            <appender-ref ref="${env:LOG4J2_APPENDER_LAYOUT}"/>
+        </logger>
+        <logger name="io.conduktor.gateway.authorization" level="error" additivity="false">
+            <appender-ref ref="${env:LOG4J2_APPENDER_LAYOUT}"/>
+        </logger>
+        <logger name="io.conduktor.gateway.rebuilder.components" level="error" additivity="false">
+            <appender-ref ref="${env:LOG4J2_APPENDER_LAYOUT}"/>
+        </logger>
+        <logger name="io.conduktor.gateway.service" level="info" additivity="false">
+            <appender-ref ref="${env:LOG4J2_APPENDER_LAYOUT}"/>
+        </logger>
+        <logger name="io.micrometer" level="error" additivity="false">
+            <appender-ref ref="${env:LOG4J2_APPENDER_LAYOUT}"/>
+        </logger>
+
+        <logger name="com.example" level="trace" additivity="false">
+            <appender-ref ref="${env:LOG4J2_APPENDER_LAYOUT}"/>
+        </logger>
+
+        <root level="warn">
+            <appender-ref ref="${env:LOG4J2_APPENDER_LAYOUT}"/>
+        </root>
+    </loggers>
+</configuration>

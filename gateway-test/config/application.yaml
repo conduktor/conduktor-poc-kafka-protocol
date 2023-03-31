@@ -1,0 +1,41 @@
+kafkaSelector:
+  type: file
+  path: config/kafka.config
+routing: ${ROUTING_MECHANISM|port}
+hostPortConfiguration:
+  gatewayBindHost: 0.0.0.0
+  gatewayHost: localhost
+  hostPrefix: broker
+  portRange: 6969:6975
+  gatewayPort: 6969
+authenticationConfig:
+  # current values NONE, SASL_PLAIN, SASL_SSL
+  authenticatorType: SSL
+  sslConfig:
+    updateContextIntervalMinutes: 5
+    keyStore:
+      keyStorePath: config/san/keystore.jks
+      keyStorePassword: changeit
+      keyPassword: changeit
+      keyStoreType: pkcs12
+      updateIntervalMsecs: 600000
+threadConfig:
+  downStreamThread: 2
+  upstream:
+    numberOfThread: ${UPSTREAM_THREAD|2}
+    maxPendingTask: ${UPSTREAM_MAX_PENDING_TASK | 2048}
+  #the maximum period the gateway will store request state if a response is not received
+maxResponseLatency: 30000
+#maximum time the gateway will maintain an inflight request
+inFlightRequestExpiryMs: 60000
+upstreamConnectionConfig:
+  numOfConnection: 2
+  #max idle time of connection from gateway to kafka server, if exceeded, the connection got killed.
+  maxIdleTimeMs: 200000
+interceptors:
+  - name: loggingInterceptor
+    pluginClass: io.conduktor.example.loggerinterceptor.LoggerInterceptorPlugin
+    priority: 100
+    config:
+      - key: "loggingStyle"
+        value: "obiWan"

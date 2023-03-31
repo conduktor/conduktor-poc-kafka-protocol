@@ -1,0 +1,75 @@
+version: '3.2'
+services:
+  zookeeper:
+    image: "confluentinc/cp-zookeeper:${CP_VERSION}"
+    restart: always
+    hostname: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: "${ZK_PORT}"
+      ZOOKEEPER_TICK_TIME: "2000"
+    ports:
+      - "${ZK_PORT}:${ZK_PORT}"
+
+  kafka1:
+    image: "confluentinc/cp-kafka:${CP_VERSION}"
+    restart: always
+    hostname: kafka1
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:${ZK_PORT}"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,AUTH:SASL_PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka1:9092,PLAINTEXT_HOST://localhost:${KAFKA1_PORT},AUTH://localhost:${KAFKA1_SASL_PORT}
+      KAFKA_BROKER_ID: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 2
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_LISTENER_NAME_AUTH_SASL_ENABLED_MECHANISMS: PLAIN
+      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_LISTENER_NAME_AUTH_PLAIN_SASL_JAAS_CONFIG: |
+        org.apache.kafka.common.security.plain.PlainLoginModule required \
+        username="admin" \
+        password="admin-secret" \
+        user_admin="admin-secret" \
+        user_conduktor="conduktor-secret";
+      KAFKA_OPTS: -Dignored
+      KAFKA_LOG4J_LOGGERS: "kafka.authorizer.logger=INFO"
+      KAFKA_LOG4J_ROOT_LOGLEVEL: WARN
+    ports:
+      - "${KAFKA1_PORT}:${KAFKA1_PORT}"
+      - "${KAFKA1_SASL_PORT}:${KAFKA1_SASL_PORT}"
+
+  kafka2:
+    image: "confluentinc/cp-kafka:${CP_VERSION}"
+    restart: always
+    hostname: kafka2
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:${ZK_PORT}"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,AUTH:SASL_PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka2:9093,PLAINTEXT_HOST://localhost:${KAFKA2_PORT},AUTH://localhost:${KAFKA2_SASL_PORT}
+      KAFKA_BROKER_ID: 2
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 2
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_LISTENER_NAME_AUTH_SASL_ENABLED_MECHANISMS: PLAIN
+      KAFKA_LISTENER_NAME_AUTH_PLAIN_SASL_JAAS_CONFIG: |
+        org.apache.kafka.common.security.plain.PlainLoginModule required \
+        username="admin" \
+        password="admin-secret" \
+        user_admin="admin-secret" \
+        user_conduktor="conduktor-secret";
+      KAFKA_OPTS: -Dignored
+      KAFKA_LOG4J_LOGGERS: "kafka.authorizer.logger=INFO"
+      KAFKA_LOG4J_ROOT_LOGLEVEL: WARN
+    ports:
+      - "${KAFKA2_PORT}:${KAFKA2_PORT}"
+      - "${KAFKA2_SASL_PORT}:${KAFKA2_SASL_PORT}"

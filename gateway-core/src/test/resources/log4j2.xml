@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="warn" packages="org.apache.logging.log4j.core">
+    <appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%red{%10.25t}] [%green{%-5p}] [%blue{%c{1}:%L}] - %m%n"/>
+        </Console>
+    </appenders>
+
+    <loggers>
+        <logger name="org.apache.kafka" level="warn" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="io.kcache" level="warn" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="io.vertx" level="error" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="io.netty" level="error" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+
+        <logger name="io.conduktor" level="info" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="io.conduktor.gateway.authorization" level="error" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="io.conduktor.gateway.rebuilder.components" level="error" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="io.conduktor.gateway.service" level="error" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <logger name="io.micrometer" level="error" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+
+        <root level="warn">
+            <appender-ref ref="Console"/>
+        </root>
+    </loggers>
+</configuration>

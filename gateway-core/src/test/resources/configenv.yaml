@@ -1,0 +1,12 @@
+company:
+   name: ${COMPANY_NAME}
+   address:
+     street: abc
+     phone: ${PHONE|1234}
+   staff:
+     - name: abc
+       age: 12
+     - name: xyz
+       age: 120
+global: ${G_VALUE}
+empty: ${EMPTY}

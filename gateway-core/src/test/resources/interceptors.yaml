@@ -1,0 +1,15 @@
+interceptors:
+  - name: someInterceptor
+    pluginClass: com.ignoreme.somePlugin
+    priority: 100
+    config:
+      - key: "someKey"
+        value: "someValue"
+      - key: "nestedMap"
+        value:
+          nestedMapKey1: "nestedMapValue1"
+          nestedMapKey2: "nestedMapValue2"
+      - key: "nestedList"
+        value:
+          - "nestedListValue1"
+          - "nestedListValue2"
