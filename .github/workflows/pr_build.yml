@@ -11,7 +11,7 @@ on:
 jobs:
   build:
 
-    runs-on: [ self-hosted, aws, X64, highcpu ]
+    runs-on: [ ubuntu-latest ]
 
     steps:
       - name: PR Title check
