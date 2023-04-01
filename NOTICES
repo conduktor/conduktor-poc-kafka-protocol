@@ -1,0 +1,25 @@
+org.bouncycastle : no notices
+io.netty
+com.fasterxml.jackson.dataformat
+com.fasterxml.jackson.datatype
+org.apache.commons: commons-lang3
+javax.annotation : no notices
+com.typesafe
+org.mockito : no notices
+org.awaitility : no notices
+io.micrometer
+org.assertj
+org.junit.jupiter
+io.vertx
+com.github.ben-manes.caffeine
+commons-collections4
+commons-io
+jakarta.validation
+org.hibernate.validator
+org.glassfish.expressly
+guice-validator
+org.testcontainers
+org.apache.kafka
+
+  io.rest-assured
+   -
