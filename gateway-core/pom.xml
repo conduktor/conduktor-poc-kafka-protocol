@@ -9,7 +9,6 @@
 
     <artifactId>gateway-core</artifactId>
     <properties>
-        <conduktor.interceptor-framework.version>0.1.0-SNAPSHOT</conduktor.interceptor-framework.version>
         <confluent.version>7.3.1</confluent.version>
         <bouncycastle.version>1.70</bouncycastle.version>
         <openapi-generator-version>6.3.0</openapi-generator-version>
@@ -188,7 +187,7 @@
         <dependency>
             <groupId>io.conduktor</groupId>
             <artifactId>interceptor-framework</artifactId>
-            <version>${conduktor.interceptor-framework.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
     </dependencies>
@@ -274,7 +273,42 @@
                     </execution>
                 </executions>
             </plugin>
-
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <from>
+                        <image>gcr.io/distroless/java17-debian11</image>
+                    </from>
+                    <to>
+                        <image>docker.io/conduktor/conduktor-gateway</image>
+                        <tags>
+                            <tag>${project.version}</tag>
+                            <tag>latest</tag>
+                        </tags>
+                    </to>
+                    <container>
+                        <extraClasspath>/app/plugins/*</extraClasspath>
+                    </container>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>dockerBuild</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>dockerBuild</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>dockerPush</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <resources>
             <resource>
