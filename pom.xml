@@ -100,7 +100,33 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <scmCommentPrefix>[release]</scmCommentPrefix>
+                    <scmReleaseCommitComment>@{prefix} @{releaseLabel}</scmReleaseCommitComment>
+                    <tagNameFormat>@{project.version}</tagNameFormat>
+                    <projectVersionPolicyId>SemVerVersionPolicy</projectVersionPolicyId>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+
+    <scm>
+        <connection>scm:git:${project.scm.url}</connection>
+        <developerConnection>scm:git:${project.scm.url}</developerConnection>
+        <url>https://github.com/conduktor/conduktor-gateway.git</url>
+        <tag>HEAD</tag>
+    </scm>
+
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/conduktor/conduktor-gateway</url>
+        </repository>
+    </distributionManagement>
 
 </project>

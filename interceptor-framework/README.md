@@ -252,7 +252,7 @@ The pom.xml in the loggerInterceptor package demonstrates one way to do this.
 
 Place the built interceptor jar file on the classpath of the gateway.
 
-Restart the gateway with the new jar file on the classpath.  In this example, the new interceptor is in a jar file that can be found in the conductor-proxy-oss-holding repository under `myNewInterceptor/target/proxy-1.0-SNAPSHOT.jar`.
+Restart the gateway with the new jar file on the classpath.  In this example, the new interceptor is in a jar file that can be found in the conduktor-gateway repository under `myNewInterceptor/target/proxy-1.0-SNAPSHOT.jar`.
 
 ```bash
 $ cp myNewInterceptor/target/my-new-interceptor-1.0-SNAPSHOT.jar bin/my-new-interceptor-1.0-SNAPSHOT.jar # Best practice is to store your interceptors in a central location

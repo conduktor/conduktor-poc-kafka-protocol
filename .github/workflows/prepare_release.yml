@@ -1,0 +1,79 @@
+name: Prepare release and tag
+run-name: Prepare release ${{ github.sha }} by @${{ github.actor }}
+
+on:
+  workflow_dispatch:
+    # Inputs the workflow accepts.
+    inputs:
+      version:
+        type: string
+        description: 'Release version'
+        required: false
+      next:
+        type: string
+        description: 'Next development version'
+        required: false
+      publish:
+        type: boolean
+        default: 'true'
+        description: 'Trigger publish workflow after tag'
+
+jobs:
+  build:
+    runs-on: [ ubuntu-latest ]
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup GPG
+        id: gpg
+        uses: crazy-max/ghaction-import-gpg@v5.2.0
+        with:
+          gpg_private_key: ${{ secrets.CONDUKTOR_BOT_GPG_PRIVATE_KEY }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+          git_tag_gpgsign: true
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+          server-id: github
+
+      - name: Maven release prepare
+        id: prepare
+        run: |
+          mvn --batch-mode release:prepare -DreleaseVersion=${{ inputs.version }} -DdevelopmentVersion=${{ inputs.next }} --file pom.xml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Read value from release properties
+        id: release_property
+        uses: christian-draeger/read-properties@1.1.1
+        with:
+          path: 'release.properties'
+          properties: 'scm.tag'
+
+
+      - name: Start publish workflow
+        if: ${{ inputs.publish }}
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: 'conduktor',
+              repo: 'conduktor-gateway',
+              workflow_id: 'publish.yml',
+              ref: 'main',
+              inputs: {
+                from: `${{ steps.release_property.outputs.scm-tag }}`,
+              },
+            });
+
