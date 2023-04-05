@@ -38,6 +38,6 @@ jobs:
           server-id: github
 
       - name: Build with Maven
-        run: mvn -B deploy --file pom.xml
+        run: mvn -B deploy --file pom.xml -pl '!logger-interceptor'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
