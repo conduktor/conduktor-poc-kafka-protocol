@@ -32,7 +32,7 @@ $ mvn clean package                # build the .jar, requires Java 17+
 ### Start Conduktor Gateway:
 
 ```bash
-$ export CLASSPATH=loggerInterceptor/target/logger-interceptor-1.0-SNAPSHOT.jar # Add the logger interceptor to the classpath, or add your own interceptor jar files here
+$ export CLASSPATH=loggerInterceptor/target/logger-interceptor-0.1.0-SNAPSHOT.jar # Add the logger interceptor to the classpath, or add your own interceptor jar files here
 $ bin/run-gateway.sh
 ```
 
