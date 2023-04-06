@@ -51,7 +51,7 @@ jobs:
         run: |
           mvn --batch-mode release:prepare -DreleaseVersion=${{ inputs.version }} -DdevelopmentVersion=${{ inputs.next }} --file pom.xml
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CONDUKTORBOT_REPO_WRITE }}
 
       - name: Read value from release properties
         id: release_property
