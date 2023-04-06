@@ -44,13 +44,11 @@ public class GatewayExecutor implements AutoCloseable {
 
     public void start() {
 
+
+
         try {
             brokerManager.setUpstreamResourceAndStartBroker(upStreamResource);
-            if (gatewayConfiguration.getRouting().equals("port")) {
-                log.info("Gateway started successfully with port range: {}", gatewayConfiguration.getHostPortConfiguration().getPortRange());
-            } else {
-                log.info("Gateway started successfully with port: {}", gatewayConfiguration.getHostPortConfiguration().getGatewayPort());
-            }
+            log.info("Gateway started successfully with port range: {}", gatewayConfiguration.getHostPortConfiguration().getPortRange());
         } catch (Exception ex) {
             log.error("Error when starting Gateway", ex);
         }

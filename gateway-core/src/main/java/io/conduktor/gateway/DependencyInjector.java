@@ -27,7 +27,6 @@ import io.conduktor.gateway.error.handler.ErrorHandler;
 import io.conduktor.gateway.metrics.MetricsRegistryProvider;
 import io.conduktor.gateway.model.BuildInfo;
 import io.conduktor.gateway.network.BrokerManager;
-import io.conduktor.gateway.network.BrokerManagerWithHostMapping;
 import io.conduktor.gateway.network.BrokerManagerWithPortMapping;
 import io.conduktor.gateway.network.GatewayBrokers;
 import io.conduktor.gateway.service.*;
@@ -149,11 +148,7 @@ public class DependencyInjector extends AbstractModule {
         bind(UpStreamResource.class).in(Singleton.class);
         bind(GatewayBrokers.class).in(Singleton.class);
         bind(GatewayExecutor.class).in(Singleton.class);
-        if (StringUtils.equals(gatewayConfiguration.getRouting(), "host")) {
-            bind(BrokerManager.class).to(BrokerManagerWithHostMapping.class).in(Singleton.class);
-        } else {
-            bind(BrokerManager.class).to(BrokerManagerWithPortMapping.class).in(Singleton.class);
-        }
+        bind(BrokerManager.class).to(BrokerManagerWithPortMapping.class).in(Singleton.class);
         bind(InFlightRequestService.class).in(Singleton.class);
         bind(RebuilderTools.class).in(Singleton.class);
         bind(InterceptorPoolService.class).in(Singleton.class);

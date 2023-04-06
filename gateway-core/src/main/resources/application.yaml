@@ -5,9 +5,6 @@ hostPortConfiguration:
   gatewayBindHost: ${GATEWAY_BIND_HOST|0.0.0.0}
   gatewayHost: ${GATEWAY_HOST|localhost}
   portRange: ${GATEWAY_PORT_RANGE|6969:6975}
-  gatewayPort: ${GATEWAY_PORT|6969}
-  hostPrefix: ${GATEWAY_HOST_PREFIX|broker}
-routing: ${ROUTING_MECHANISM|port}
 authenticationConfig:
   #-----------current values NONE, SSL-----------##
   authenticatorType: ${AUTHENTICATION_AUTHENTICATOR_TYPE|NONE}
