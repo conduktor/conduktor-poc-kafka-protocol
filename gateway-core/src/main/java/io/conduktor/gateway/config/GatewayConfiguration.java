@@ -35,7 +35,6 @@ public class GatewayConfiguration {
     @NotNull
     @Valid
     private HostPortConfiguration hostPortConfiguration;
-    private String routing;
     @NotNull
     @Valid
     private AuthenticationConfig authenticationConfig;

@@ -1,13 +1,10 @@
 kafkaSelector:
   type: file
   path: config/kafka.config
-routing: ${ROUTING_MECHANISM|port}
 hostPortConfiguration:
   gatewayBindHost: 0.0.0.0
   gatewayHost: localhost
-  hostPrefix: broker
   portRange: 6969:6975
-  gatewayPort: 6969
 authenticationConfig:
   # current values NONE, SASL_PLAIN, SASL_SSL
   authenticatorType: SSL

@@ -36,7 +36,6 @@ public class GatewayPortRoutingTest extends BaseGatewayIntegrationTest {
 
     @Override
     protected void reconfigureGateway(GatewayConfiguration gatewayConfiguration) {
-        gatewayConfiguration.setRouting("port");
         gatewayConfiguration.getHostPortConfiguration().setGatewayHost("localhost");
     }
 
