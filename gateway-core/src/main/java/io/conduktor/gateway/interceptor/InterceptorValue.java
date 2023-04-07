@@ -15,10 +15,18 @@
 
 package io.conduktor.gateway.interceptor;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.experimental.Accessors;
 import org.apache.kafka.common.requests.AbstractRequestResponse;
 
-public record InterceptorValue(
-        Interceptor<AbstractRequestResponse> interceptor,
-        int priority
-) {
+@Data
+@Accessors(fluent = true)
+@AllArgsConstructor
+public class InterceptorValue {
+
+    private Interceptor<AbstractRequestResponse> interceptor;
+    private int priority;
+    private Long timeoutMs;
+
 }
