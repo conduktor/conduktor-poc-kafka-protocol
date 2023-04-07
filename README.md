@@ -1,3 +1,8 @@
+<img src="https://www.conduktor.io/svgs/logo/black.svg" width="256">
+
+[![build](https://github.com/conduktor/conduktor-gateway/actions/workflows/build.yml/badge.svg)](https://github.com/conduktor/conduktor-gateway/actions/workflows/build.yml)
+
+
 # Conduktor Gateway — a Kafka transformer platform
 
 Conduktor Gateway is a tool to intercept and then filter and transform requests and responses between clients and Apache
