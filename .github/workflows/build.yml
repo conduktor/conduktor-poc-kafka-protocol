@@ -1,21 +1,17 @@
 # This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
-name: PR Build
-run-name: PR Build for ${{ github.event.pull_request.title }} (${{ github.ref_name }})
+name: Build on Main
+run-name: Build Main for ${{ github.sha }}
 
 on:
-  pull_request:
-    branches: [ "main" ]
-    types: [ opened, edited, synchronize, reopened ]
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  push:
+    branches:
+      - "main"
 
 jobs:
   build:
-
+    if: "!contains(github.event.head_commit.message, '[release]')"
     runs-on: [ ubuntu-latest ]
 
     steps:

@@ -32,7 +32,7 @@ $ mvn clean package                # build the .jar, requires Java 17+
 ### Start Conduktor Gateway:
 
 ```bash
-$ export CLASSPATH=loggerInterceptor/target/logger-interceptor-1.0-SNAPSHOT.jar # Add the logger interceptor to the classpath, or add your own interceptor jar files here
+$ export CLASSPATH=logger-interceptor/target/logger-interceptor-0.1.0-SNAPSHOT.jar # Add the logger interceptor to the classpath, or add your own interceptor jar files here
 $ bin/run-gateway.sh
 ```
 
@@ -133,19 +133,12 @@ kafkaSelector:
     path:  - the path to the file containing Kafka connection properties e.g. config/kafka.config
 ```
 
-### Routing Configurations
-```yaml
-routing: - how Conduktor Gateway should map incoming connections to backing cluster connections. Options are host/port
-```
-
 ### Host/Port Configurations
 ```yaml
 hostPortConfiguration:
   gatewayBindHost: - the host to bind on e.g. 0.0.0.0
   gatewayHost: - the host name of the gateway to be returned to clients e.g. localhost
-  hostPrefix: - a prefix for broker host names when using host routsing. e.g. broker
-  portRange: - a port range that gateway can assign to brokers when using port routing e.g. 6969:6975
-  gatewayPort: - the port on which gateway should accept connections when using host routing e.g. 6969
+  portRange: - a port range that gateway can assign to brokers e.g. 6969:6975
 ```
 
 ### Authentication Configurations

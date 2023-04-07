@@ -192,7 +192,6 @@ public abstract class BaseGatewayIntegrationTest extends DockerComposeIntegratio
         try {
             generateGatewayConfiguration(configFile);
             reconfigureGateway(gatewayConfiguration);
-            gatewayConfiguration.getHostPortConfiguration().setGatewayPort(getGatewayPort());
             this.closed = false;
             startGatewayAtPort(getPortRangeForGateway());
             this.rebuildMapper = injector.getInstance(RebuildMapper.class);

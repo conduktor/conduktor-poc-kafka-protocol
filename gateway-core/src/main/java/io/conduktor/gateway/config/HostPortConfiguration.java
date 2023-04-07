@@ -31,12 +31,10 @@ public class HostPortConfiguration {
     private String gatewayBindHost;
     @NotBlank
     private String gatewayHost;
-    private String hostPrefix;
     //port_start:port_end
     @NotBlank
     @PortRange
     private String portRange;
-    private int gatewayPort;
 
 
     public List<Integer> getPortInRange() {

@@ -1,13 +1,10 @@
 kafkaSelector:
   type: file
   path: config/kafka.config
-routing: ${ROUTING_MECHANISM|port}
 hostPortConfiguration:
   gatewayBindHost: 0.0.0.0
   gatewayHost: localhost
-  hostPrefix: broker
   portRange: 6969:6975
-  gatewayPort: 6969
 authenticationConfig:
   # current values NONE, SASL_PLAIN, SASL_SSL
   authenticatorType: SSL
@@ -33,8 +30,8 @@ upstreamConnectionConfig:
   #max idle time of connection from gateway to kafka server, if exceeded, the connection got killed.
   maxIdleTimeMs: 200000
 interceptors:
-  - name: loggingInterceptor
-    pluginClass: io.conduktor.example.loggerinterceptor.LoggerInterceptorPlugin
+  - name: testInterceptor
+    pluginClass: io.conduktor.gateway.integration.interceptor.TestInterceptorPlugin
     priority: 100
     config:
       - key: "loggingStyle"
