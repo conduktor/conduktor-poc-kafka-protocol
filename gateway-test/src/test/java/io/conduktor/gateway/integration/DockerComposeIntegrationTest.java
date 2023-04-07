@@ -32,6 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Slf4j
 public abstract class DockerComposeIntegrationTest {
 
+    public static final int NUM_OF_BROKER = 2;
     private static final String DOCKER_COMPOSE_FILE_PATH = "/docker-compose.yaml";
     private static final int MINIO_PORT = 9000;
     private static final AtomicBoolean isStarted = new AtomicBoolean(false);

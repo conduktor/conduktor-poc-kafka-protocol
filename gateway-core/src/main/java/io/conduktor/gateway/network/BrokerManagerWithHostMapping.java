@@ -43,14 +43,12 @@ public class BrokerManagerWithHostMapping extends BrokerManager {
     private List<Node> nodes = new ArrayList<>();
 
     @Inject
-    public BrokerManagerWithHostMapping(@Named("kafkaServerProperties") Properties properties,
+    public BrokerManagerWithHostMapping(@Named("kafkaNodes") List<Node> nodes,
                                         GatewayBrokers gatewayBrokers,
                                         AuthenticationConfig authenticationConfig,
                                         HostPortConfiguration hostPortConfiguration,
-                                        MetricsRegistryProvider metricsRegistryProvider,
-                                        ClientService clientService) {
-        super(properties, authenticationConfig, hostPortConfiguration, metricsRegistryProvider, gatewayBrokers,
-                clientService);
+                                        MetricsRegistryProvider metricsRegistryProvider) {
+        super(nodes, authenticationConfig, hostPortConfiguration, metricsRegistryProvider, gatewayBrokers);
         this.gatewayPort = hostPortConfiguration.getGatewayPort();
         this.hostPrefix = hostPortConfiguration.getHostPrefix();
     }

@@ -36,6 +36,7 @@ import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 
 import static io.conduktor.gateway.common.NodeUtils.keyOf;
@@ -91,7 +92,7 @@ class BrokerManagerWithPortMappingTest {
         when(mockClientService.getAvailableKafkaNode(any(Properties.class)))
                 .thenReturn(new Node(-1, FIRST_HOST, KAFKA_PORT));
         brokerManager = new BrokerManagerWithPortMapping(
-                PROPERTIES,
+                List.of(new Node(-1, FIRST_HOST, KAFKA_PORT)),
                 GATEWAY_BROKERS,
                 HOST_PORT_CONFIGURATION,
                 AUTHENTICATION_CONFIG,
