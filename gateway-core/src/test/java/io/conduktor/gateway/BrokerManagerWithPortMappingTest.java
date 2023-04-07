@@ -88,16 +88,12 @@ class BrokerManagerWithPortMappingTest {
 
     @BeforeEach
     void setUp() {
-        var mockClientService = Mockito.mock(ClientService.class);
-        when(mockClientService.getAvailableKafkaNode(any(Properties.class)))
-                .thenReturn(new Node(-1, FIRST_HOST, KAFKA_PORT));
         brokerManager = new BrokerManagerWithPortMapping(
                 List.of(new Node(-1, FIRST_HOST, KAFKA_PORT)),
                 GATEWAY_BROKERS,
                 HOST_PORT_CONFIGURATION,
                 AUTHENTICATION_CONFIG,
-                null,
-                mockClientService);
+                null);
         brokerManager.setUpstreamResourceAndStartBroker(UP_STREAM_RESOURCE);
         Mockito.clearInvocations(UP_STREAM_RESOURCE);
         Mockito.clearInvocations(GATEWAY_BROKERS);
