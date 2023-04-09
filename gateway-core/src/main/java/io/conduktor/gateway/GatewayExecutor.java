@@ -22,6 +22,8 @@ import io.conduktor.gateway.network.BrokerManager;
 import io.conduktor.gateway.thread.UpStreamResource;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Objects;
+
 @Slf4j
 public class GatewayExecutor implements AutoCloseable {
 
@@ -43,25 +45,35 @@ public class GatewayExecutor implements AutoCloseable {
     }
 
     public void start() {
-
-
-
         try {
             brokerManager.setUpstreamResourceAndStartBroker(upStreamResource);
             log.info("Gateway started successfully with port range: {}", gatewayConfiguration.getHostPortConfiguration().getPortRange());
         } catch (Exception ex) {
             log.error("Error when starting Gateway", ex);
         }
+        Thread printingHook = new Thread(() -> close());
+        Runtime.getRuntime().addShutdownHook(printingHook);
+
     }
 
     @Override
-    public void close() throws Exception {
-        if (upStreamResource != null) {
-            upStreamResource.shutdownGracefully();
+    public void close() {
+        log.error("Start to close resources!!!");
+        try {
+            if (upStreamResource != null) {
+                upStreamResource.shutdownGracefully();
+            }
+            if (metricsRegistryProvider != null) {
+                metricsRegistryProvider.close();
+            }
+            if (Objects.nonNull(brokerManager)) {
+                brokerManager.close();
+            }
+        } catch (Exception e) {
+            log.error("Error happen when close metric registry provider");
+            throw new RuntimeException(e);
         }
-        if (metricsRegistryProvider != null) {
-            metricsRegistryProvider.close();
-        }
+
     }
 
 }
