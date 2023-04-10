@@ -32,7 +32,7 @@ public interface Plugin {
     default Map<Class<?>, List<Interceptor>> getTypedInterceptors() {
         var typedInterceptors = new HashMap<Class<?>, List<Interceptor>>();
         getInterceptors().forEach(gatewayInterceptor -> {
-            var requestType = Arrays.stream(gatewayInterceptor.getClass().getDeclaredMethods())
+            var requestType = Arrays.stream(gatewayInterceptor.getClass().getMethods())
                     .filter(method -> Modifier.isPublic(method.getModifiers()) &&
                             !method.isBridge() &&
                             method.getName().equals(INTERCEPT_METHOD) &&
