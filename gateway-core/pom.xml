@@ -246,7 +246,7 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <argLine>--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED</argLine>
+                    <argLine>--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED -javaagent:"${settings.localRepository}"/org/jmockit/jmockit/1.49/jmockit-1.49.jar</argLine>
                 </configuration>
             </plugin>
             <plugin>
