@@ -13,7 +13,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package io.conduktor.gateway.rebuilder.exception;
+package io.conduktor.gateway.interceptor;
 
 import lombok.Getter;
 import org.apache.kafka.common.requests.AbstractResponse;
@@ -21,7 +21,7 @@ import org.apache.kafka.common.requests.AbstractResponse;
 /**
  * An error with intention for quickly reply to client
  */
-public class GatewayIntentionException extends RuntimeException{
+public class InterceptorIntentionException extends RuntimeException{
 
     @Getter
     private final AbstractResponse errorResponse;
@@ -29,19 +29,19 @@ public class GatewayIntentionException extends RuntimeException{
     @Getter
     private final boolean logAtErrorLevel;
 
-    public GatewayIntentionException(AbstractResponse errorResponse) {
+    public InterceptorIntentionException(AbstractResponse errorResponse) {
 
         this.errorResponse = errorResponse;
         this.logAtErrorLevel = true;
     }
 
-    public GatewayIntentionException(String message, AbstractResponse errorResponse) {
+    public InterceptorIntentionException(String message, AbstractResponse errorResponse) {
         super(message);
         this.errorResponse = errorResponse;
         this.logAtErrorLevel = true;
     }
 
-    public GatewayIntentionException(AbstractResponse errorResponse, boolean logAtErrorLevel) {
+    public InterceptorIntentionException(AbstractResponse errorResponse, boolean logAtErrorLevel) {
         this.errorResponse = errorResponse;
         this.logAtErrorLevel = logAtErrorLevel;
     }

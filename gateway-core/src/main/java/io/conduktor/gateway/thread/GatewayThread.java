@@ -22,7 +22,7 @@ import io.conduktor.gateway.metrics.MetricsRegistryProvider;
 import io.conduktor.gateway.network.GatewayChannel;
 import io.conduktor.gateway.network.UpstreamIO;
 import io.conduktor.gateway.rebuilder.components.RebuildMapper;
-import io.conduktor.gateway.rebuilder.exception.GatewayIntentionException;
+import io.conduktor.gateway.interceptor.InterceptorIntentionException;
 import io.conduktor.gateway.service.ClientRequest;
 import io.conduktor.gateway.service.InFlightRequestService;
 import io.micrometer.core.instrument.Counter;
@@ -280,7 +280,7 @@ public class GatewayThread extends SingleThreadEventLoop {
     }
 
     private void logErrorIfRequired(String message, Throwable exception) {
-        if (exception instanceof GatewayIntentionException && !((GatewayIntentionException) exception).isLogAtErrorLevel()) {
+        if (exception instanceof InterceptorIntentionException && !((InterceptorIntentionException) exception).isLogAtErrorLevel()) {
             return;
         }
         log.error(message, exception);

@@ -25,7 +25,7 @@ public interface Plugin {
     int EXPECTED_PARAMETER_COUNT = 2;
     String INTERCEPT_METHOD = "intercept";
 
-    void configure(Map<String,Object> config);
+    void configure(Map<String,Object> config) throws InterceptorConfigurationException;
 
     List<Interceptor> getInterceptors();
 

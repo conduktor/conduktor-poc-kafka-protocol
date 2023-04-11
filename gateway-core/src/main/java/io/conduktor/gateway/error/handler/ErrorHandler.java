@@ -18,7 +18,7 @@ package io.conduktor.gateway.error.handler;
 import com.google.inject.Inject;
 import io.conduktor.gateway.common.ExceptionUtils;
 import io.conduktor.gateway.error.handler.components.DefaultResponseErrorBuilder;
-import io.conduktor.gateway.rebuilder.exception.GatewayIntentionException;
+import io.conduktor.gateway.interceptor.InterceptorIntentionException;
 import io.conduktor.gateway.service.ClientRequest;
 import io.conduktor.gateway.service.RebuilderTools;
 import io.netty.buffer.ByteBuf;
@@ -66,14 +66,14 @@ public class ErrorHandler {
     }
 
     public boolean handleGatewayException(ClientRequest clientRequest, Throwable cause) {
-        if (cause instanceof GatewayIntentionException gatewayIntentionException) {
-            handleInterceptorIntentionError(clientRequest, gatewayIntentionException);
+        if (cause instanceof InterceptorIntentionException interceptorIntentionException) {
+            handleInterceptorIntentionError(clientRequest, interceptorIntentionException);
             return true;
         }
         return false;
     }
 
-    private void handleInterceptorIntentionError(ClientRequest clientRequest, GatewayIntentionException intentionError) {
+    private void handleInterceptorIntentionError(ClientRequest clientRequest, InterceptorIntentionException intentionError) {
         var response = intentionError.getErrorResponse();
         var buf = getResponseBuf(clientRequest, response);
         var responseHeaderByteBuf = buffer(RESPONSE_BUFFER_INITIAL_CAPACITY);
