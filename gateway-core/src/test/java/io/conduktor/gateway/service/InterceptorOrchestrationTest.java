@@ -81,5 +81,10 @@ public class InterceptorOrchestrationTest {
             return CompletableFuture.supplyAsync(() -> "someValue", afterTenSecs)
                     .thenApply(rs -> input);
         }
+
+        @Override
+        public Class<FetchResponse> type() {
+            return FetchResponse.class;
+        }
     }
 }

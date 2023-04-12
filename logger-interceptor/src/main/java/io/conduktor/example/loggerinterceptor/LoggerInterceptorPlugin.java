@@ -17,6 +17,7 @@ package io.conduktor.example.loggerinterceptor;
 
 
 import io.conduktor.gateway.interceptor.Interceptor;
+import io.conduktor.gateway.interceptor.InterceptorConfigurationException;
 import io.conduktor.gateway.interceptor.Plugin;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,23 +27,22 @@ import java.util.Map;
 @Slf4j
 public class LoggerInterceptorPlugin implements Plugin {
 
-    private String prefix;
     @Override
-    public void configure(Map<String, Object> config) {
-
+    public List<Interceptor> getInterceptors(Map<String, Object> config) throws InterceptorConfigurationException {
+        String prefix = "";
         var loggingStyle = config.get("loggingStyle");
         if (loggingStyle.equals("obiWan")) {
-            this.prefix = "Hello there";
+            prefix = "Hello there";
         }
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Override
-    public List<Interceptor> getInterceptors() {
         return List.of(new AllLoggerInterceptor(prefix),
                 new FetchRequestLoggerInterceptor(),
                 new FetchResponseLoggerInterceptor(),
                 new ProduceLoggerInterceptor(),
                 new ResponseLoggerInterceptor());
+    }
+
+    @Override
+    public String pluginId() {
+        return Plugin.super.pluginId();
     }
 }

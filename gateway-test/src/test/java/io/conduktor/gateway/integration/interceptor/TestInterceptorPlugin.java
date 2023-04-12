@@ -29,18 +29,15 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 public class TestInterceptorPlugin implements Plugin {
-    private String prefix;
-    @Override
-    public void configure(Map<String, Object> config) {
-        var loggingStyle = config.get("loggingStyle");
-        if (loggingStyle.equals("obiWan")) {
-            this.prefix = "Hello there";
-        }
-    }
 
     @SuppressWarnings("rawtypes")
     @Override
-    public List<Interceptor> getInterceptors() {
+    public List<Interceptor> getInterceptors(Map<String, Object> config) {
+        String prefix = "";
+        var loggingStyle = config.get("loggingStyle");
+        if (loggingStyle.equals("obiWan")) {
+            prefix = "Hello there";
+        }
         return List.of(new AllLoggerInterceptor(prefix),
                 new FetchRequestLoggerInterceptor(),
                 new FetchResponseLoggerInterceptor());
@@ -59,6 +56,11 @@ public class TestInterceptorPlugin implements Plugin {
             log.warn("{}, a {} was sent/received", prefix, input.getClass());
             return CompletableFuture.completedFuture(input);
         }
+
+        @Override
+        public Class<AbstractRequestResponse> type() {
+            return AbstractRequestResponse.class;
+        }
     }
 
     @Slf4j
@@ -70,6 +72,11 @@ public class TestInterceptorPlugin implements Plugin {
             interceptorContext.inFlightInfo().put("source", source);
             return CompletableFuture.completedFuture(input);
         }
+
+        @Override
+        public Class<FetchRequest> type() {
+            return FetchRequest.class;
+        }
     }
 
     @Slf4j
@@ -78,6 +85,11 @@ public class TestInterceptorPlugin implements Plugin {
         public CompletionStage<FetchResponse> intercept(FetchResponse input, InterceptorContext interceptorContext) {
             log.warn("Fetch from client {} was responded to", interceptorContext.inFlightInfo().get("source"));
             return CompletableFuture.completedFuture(input);
+        }
+
+        @Override
+        public Class<FetchResponse> type() {
+            return FetchResponse.class;
         }
     }
 

@@ -15,15 +15,15 @@
 
 package io.conduktor.gateway.config;
 
+import io.conduktor.gateway.interceptor.Plugin;
 import io.conduktor.gateway.service.InterceptorPoolService;
+import io.conduktor.gateway.service.PluginLoader;
 import jakarta.validation.Validation;
 import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.AbstractMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -94,7 +94,7 @@ public class GatewayConfigurationTest {
                 new InterceptorPluginConfig("name", "className", 2, List.of()));
         var config = new GatewayConfiguration();
         config.setInterceptors(interceptors);
-        assertThatThrownBy(() -> new InterceptorPoolService(config))
+        assertThatThrownBy(() -> new InterceptorPoolService(config, Collections::emptyList))
                 .cause()
                 .isInstanceOf(IllegalArgumentException.class)
                 .message()

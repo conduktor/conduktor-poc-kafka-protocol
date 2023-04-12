@@ -15,7 +15,12 @@
 
 package io.conduktor.gateway.integration.interceptor;
 
+import com.google.inject.AbstractModule;
 import io.conduktor.gateway.integration.BaseGatewayIntegrationTest;
+import io.conduktor.gateway.interceptor.Plugin;
+import io.conduktor.gateway.service.PluginLoader;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.requests.AbstractRequestResponse;
 import org.apache.kafka.common.requests.AbstractResponse;
@@ -31,9 +36,11 @@ import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.time.Duration;
+import java.util.*;
 import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -46,6 +53,26 @@ public class LoggerInterceptorPluginIntegrationTest extends BaseGatewayIntegrati
     public static final String SOME_KEY = "someKey";
     public static final String SOME_VALUE = "someValue";
     public static final String LOGGERINTERCEPTOR_PACKAGE = "io.conduktor.gateway.integration.interceptor";
+
+    @Override
+    protected AbstractModule mockGuiceModule() {
+        return new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(PluginLoader.class).toInstance(() -> List.of(new ServiceLoader.Provider<Plugin>() {
+                    @Override
+                    public Class<? extends Plugin> type() {
+                        return TestInterceptorPlugin.class;
+                    }
+
+                    @Override
+                    public Plugin get() {
+                        return new TestInterceptorPlugin();
+                    }
+                }));
+            }
+        };
+    }
 
     @Test
     public void testLoadsInterceptors() {

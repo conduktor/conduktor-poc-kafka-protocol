@@ -32,4 +32,9 @@ public class FetchRequestLoggerInterceptor implements Interceptor<FetchRequest> 
         interceptorContext.inFlightInfo().put("source", source);
         return CompletableFuture.completedFuture(input);
     }
+
+    @Override
+    public Class<FetchRequest> type() {
+        return FetchRequest.class;
+    }
 }

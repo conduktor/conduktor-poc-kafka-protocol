@@ -31,4 +31,9 @@ public class ResponseLoggerInterceptor implements Interceptor<AbstractResponse> 
         log.warn("A {} was sent", DirectionType.RESPONSE);
         return CompletableFuture.completedFuture(input);
     }
+
+    @Override
+    public Class<AbstractResponse> type() {
+        return AbstractResponse.class;
+    }
 }

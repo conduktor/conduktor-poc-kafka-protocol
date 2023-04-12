@@ -19,7 +19,10 @@ import org.apache.kafka.common.requests.AbstractRequestResponse;
 
 import java.util.concurrent.CompletionStage;
 
+
 public interface Interceptor<INOUT extends AbstractRequestResponse>{
 
     CompletionStage<INOUT> intercept(INOUT input, InterceptorContext interceptorContext);
+
+    Class<INOUT> type();
 }
