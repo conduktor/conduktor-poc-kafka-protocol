@@ -18,6 +18,7 @@ package io.conduktor.gateway.service;
 import io.conduktor.gateway.config.InterceptorConfigEntry;
 import io.conduktor.gateway.config.InterceptorPluginConfig;
 import io.conduktor.gateway.config.GatewayConfiguration;
+import io.conduktor.gateway.interceptor.InterceptorConfigurationException;
 import io.conduktor.gateway.interceptor.InterceptorValue;
 import io.conduktor.gateway.interceptor.Plugin;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +53,7 @@ public class InterceptorPoolService {
     }
 
     @SuppressWarnings("unchecked")
-    private void loadInterceptors() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    private void loadInterceptors() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, InterceptorConfigurationException {
         validateInterceptorPluginConfigs(gatewayConfiguration.getInterceptors());
         for (InterceptorPluginConfig config : gatewayConfiguration.getInterceptors()) {
             Class classToInstantiate = Class.forName(config.getPluginClass());
