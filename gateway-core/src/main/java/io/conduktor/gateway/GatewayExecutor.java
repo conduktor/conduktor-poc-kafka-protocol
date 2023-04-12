@@ -51,8 +51,7 @@ public class GatewayExecutor implements AutoCloseable {
         } catch (Exception ex) {
             log.error("Error when starting Gateway", ex);
         }
-        Thread printingHook = new Thread(() -> close());
-        Runtime.getRuntime().addShutdownHook(printingHook);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> close()));
 
     }
 
