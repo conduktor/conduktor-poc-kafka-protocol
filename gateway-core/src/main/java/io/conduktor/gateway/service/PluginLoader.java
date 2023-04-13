@@ -7,5 +7,5 @@ import java.util.ServiceLoader;
 
 @FunctionalInterface
 public interface PluginLoader {
-    List<? extends ServiceLoader.Provider<Plugin>> load();
+    List<Plugin> load();
 }

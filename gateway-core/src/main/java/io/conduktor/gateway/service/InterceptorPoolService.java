@@ -59,8 +59,8 @@ public class InterceptorPoolService {
                 .flatMap(provider ->
                         gatewayConfiguration.getInterceptors()
                                 .stream()
-                                .filter(interceptorConfig -> interceptorConfig.getPluginClass().equals(provider.type().getCanonicalName()))
-                                .findFirst().stream().map(config -> Map.entry(provider.get(), config)))
+                                .filter(interceptorConfig -> interceptorConfig.getPluginClass().equals(provider.pluginId()))
+                                .findFirst().stream().map(config -> Map.entry(provider, config)))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         for (Map.Entry<Plugin, InterceptorPluginConfig> entry : pluginAndConfigs.entrySet()) {
             var config = entry.getValue().getConfig().stream()

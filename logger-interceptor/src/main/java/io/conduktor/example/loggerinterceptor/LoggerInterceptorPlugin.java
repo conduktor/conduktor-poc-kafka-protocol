@@ -28,7 +28,7 @@ import java.util.Map;
 public class LoggerInterceptorPlugin implements Plugin {
 
     @Override
-    public List<Interceptor> getInterceptors(Map<String, Object> config) throws InterceptorConfigurationException {
+    public List<Interceptor> getInterceptors(Map<String, Object> config) {
         String prefix = "";
         var loggingStyle = config.get("loggingStyle");
         if (loggingStyle.equals("obiWan")) {
@@ -41,8 +41,4 @@ public class LoggerInterceptorPlugin implements Plugin {
                 new ResponseLoggerInterceptor());
     }
 
-    @Override
-    public String pluginId() {
-        return Plugin.super.pluginId();
-    }
 }

@@ -8,7 +8,7 @@ import java.util.ServiceLoader;
 public class PluginServiceLoader implements PluginLoader {
 
     @Override
-    public List<? extends ServiceLoader.Provider<Plugin>> load() {
-        return ServiceLoader.load(Plugin.class).stream().toList();
+    public List<Plugin> load() {
+        return ServiceLoader.load(Plugin.class).stream().map(ServiceLoader.Provider::get).toList();
     }
 }
