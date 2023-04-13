@@ -59,17 +59,7 @@ public class LoggerInterceptorPluginIntegrationTest extends BaseGatewayIntegrati
         return new AbstractModule() {
             @Override
             protected void configure() {
-                bind(PluginLoader.class).toInstance(() -> List.of(new ServiceLoader.Provider<Plugin>() {
-                    @Override
-                    public Class<? extends Plugin> type() {
-                        return TestInterceptorPlugin.class;
-                    }
-
-                    @Override
-                    public Plugin get() {
-                        return new TestInterceptorPlugin();
-                    }
-                }));
+                bind(PluginLoader.class).toInstance(() -> List.of(new TestInterceptorPlugin()));
             }
         };
     }
