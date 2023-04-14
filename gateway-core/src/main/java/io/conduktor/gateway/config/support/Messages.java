@@ -21,5 +21,5 @@ public class Messages {
     public static final int ERROR_READING_CONFIG_FILE = 5002;
     public static final int ERROR_WHEN_CLOSING_GATEWAY = 5003;
     public static final int ERROR_ACTIVATING_GATEWAY_PORT = 5004;
-    public static final int PORT_NOT_ENOUGH_EXIT_CODE = 70;
+    public static final int PORT_NOT_ENOUGH_EXIT_CODE = 5005;
 }
