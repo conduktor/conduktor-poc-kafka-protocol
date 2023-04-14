@@ -18,7 +18,6 @@
         <maven.compiler.target>17</maven.compiler.target>
         <log4j2.version>2.17.2</log4j2.version>
         <kafka.version>3.3.2</kafka.version>
-        <jmockit.version>1.49</jmockit.version>
     </properties>
 
     <dependencies>
@@ -54,12 +53,6 @@
         </dependency>
 
 
-        <dependency>
-            <groupId>org.jmockit</groupId>
-            <artifactId>jmockit</artifactId>
-            <version>${jmockit.version}</version>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
