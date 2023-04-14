@@ -17,6 +17,7 @@ package io.conduktor.gateway;
 
 
 import io.conduktor.gateway.config.*;
+import io.conduktor.gateway.config.support.Messages;
 import io.conduktor.gateway.network.BrokerManager;
 import io.conduktor.gateway.network.BrokerManagerWithPortMapping;
 import io.conduktor.gateway.network.GatewayBrokers;
@@ -36,13 +37,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static io.conduktor.gateway.common.NodeUtils.keyOf;
@@ -268,7 +267,7 @@ class BrokerManagerWithPortMappingTest {
                         AUTHENTICATION_CONFIG,
                         null))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessage("70");
+                .hasMessage(String.valueOf(Messages.PORT_NOT_ENOUGH_EXIT_CODE));
     }
 
 
@@ -301,7 +300,7 @@ class BrokerManagerWithPortMappingTest {
         gatewayPortsField.set(brokerManager, List.of(1));
         Assertions.assertThatThrownBy(() -> brokerManager.getRealToGatewayMap(new MetadataResponseBrokerCollection(responseBrokers.iterator())))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessage("70");
+                .hasMessage(String.valueOf(Messages.PORT_NOT_ENOUGH_EXIT_CODE));
     }
 
 
