@@ -51,14 +51,11 @@ public class GatewayBrokers {
     private final Map<Integer, GatewayChannelInitializer> gatewayChannelInitializers;
     private final Gauge gauge;
     private final String gatewayBindHost;
-    private SslConfig gatewaySslConfig;
 
     @Inject
     public GatewayBrokers(@Named("downstreamThread") Integer downstreamThread,
-                          @Named("gatewaySslConfig") SslConfig gatewaySslConfig,
                           HostPortConfiguration hostPortConfiguration,
                           MetricsRegistryProvider metricsRegistryProvider) {
-        this.gatewaySslConfig = gatewaySslConfig;
         this.bossGroup = new NioEventLoopGroup(downstreamThread);
         this.gatewayBrokers = new HashMap<>();
         this.gatewayChannelInitializers = new HashMap<>();

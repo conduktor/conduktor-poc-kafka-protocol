@@ -33,6 +33,7 @@
         <reflections.version>0.10.2</reflections.version>
         <javax.xml.version>2.4.0-b180830.0359</javax.xml.version>
         <typesafe.config.version>1.4.2</typesafe.config.version>
+        <jmockit.version>1.49</jmockit.version>
     </properties>
 
     <profiles>
@@ -190,6 +191,13 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.jmockit</groupId>
+            <artifactId>jmockit</artifactId>
+            <version>${jmockit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -246,7 +254,7 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <argLine>--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED</argLine>
+                    <argLine>--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED -javaagent:"${settings.localRepository}"/org/jmockit/jmockit/"${jmockit.version}"/jmockit-"${jmockit.version}".jar</argLine>
                 </configuration>
             </plugin>
             <plugin>

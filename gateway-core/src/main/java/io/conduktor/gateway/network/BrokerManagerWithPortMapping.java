@@ -20,10 +20,12 @@ import io.conduktor.gateway.config.AuthenticationConfig;
 import io.conduktor.gateway.config.Endpoint;
 import io.conduktor.gateway.config.HostPortConfiguration;
 import io.conduktor.gateway.config.GatewayPortAndKafkaNodePair;
+import io.conduktor.gateway.config.support.Messages;
 import io.conduktor.gateway.metrics.MetricsRegistryProvider;
-import io.conduktor.gateway.service.ClientService;
 import io.netty.channel.socket.SocketChannel;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.kafka.common.Node;
 
 import javax.inject.Inject;
@@ -36,22 +38,33 @@ import static io.conduktor.gateway.common.NodeUtils.keyOf;
 @Slf4j
 public class BrokerManagerWithPortMapping extends BrokerManager {
 
-
     private final List<Integer> gatewayPorts;
 
     private Map<String, GatewayPortAndKafkaNodePair> realHostToPortMappings = new HashMap<>();
     private Map<Integer, Node> portToNodeMap = new HashMap<>();
 
     @Inject
-    public BrokerManagerWithPortMapping(@Named("kafkaServerProperties") Properties properties,
+    public BrokerManagerWithPortMapping(@Named("kafkaNodes") List<Node> nodes,
                                         GatewayBrokers gatewayBrokers,
                                         HostPortConfiguration hostPortConfiguration,
                                         AuthenticationConfig authenticationConfig,
-                                        MetricsRegistryProvider metricsRegistryProvider,
-                                        ClientService clientService) {
-        super(properties, authenticationConfig, hostPortConfiguration, metricsRegistryProvider, gatewayBrokers,
-                clientService);
+                                        MetricsRegistryProvider metricsRegistryProvider) {
+        super(nodes, authenticationConfig, hostPortConfiguration, metricsRegistryProvider, gatewayBrokers);
         this.gatewayPorts = hostPortConfiguration.getPortInRange();
+        validatePortRangeWithKafkaNodes(nodes);
+    }
+
+    private void validatePortRangeWithKafkaNodes(@NonNull List<Node> nodes) {
+        if (gatewayPorts.size() < nodes.size()) {
+            var portSize = CollectionUtils.isEmpty(gatewayPorts) ? 0 : gatewayPorts.size();
+            var numOfBroker = CollectionUtils.isEmpty(nodes) ? 0 : nodes.size();
+            log.error("Port mapping: port range has {} ports, which is less than {} - number of kafka brokers.", portSize, numOfBroker);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+            }
+            System.exit(Messages.PORT_NOT_ENOUGH_EXIT_CODE);
+        }
     }
 
     @Override
@@ -64,7 +77,7 @@ public class BrokerManagerWithPortMapping extends BrokerManager {
 
     @Override
     public synchronized Map<String, Endpoint> getRealToGatewayMap(List<Node> brokers) {
-
+        validatePortRangeWithKafkaNodes(brokers);
         var sortedBrokers = brokers.stream().sorted((b1, b2) -> {
             var compareHost = b1.host().compareTo(b2.host());
             if (compareHost != 0) {

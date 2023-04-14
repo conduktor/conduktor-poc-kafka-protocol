@@ -22,9 +22,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.kafka.clients.admin.Admin;
 import org.apache.kafka.common.Node;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -52,19 +50,23 @@ public class ClientService {
                 .orElseThrow(() -> new IllegalArgumentException("Cannot connect to Kafka: " + kafkaProperties.getProperty("bootstrap.servers")));
     }
 
-    private Collection<Node> getKafkaNodes(Properties kafkaProperties) {
+    public List<Node> getKafkaNodes(){
+        return getKafkaNodes(kafkaConnectionProperties);
+    }
+
+    private List<Node> getKafkaNodes(Properties kafkaProperties) {
         try (var adminClient = Admin.create(kafkaProperties)) {
             var nodes = adminClient.describeCluster()
                     .nodes()
                     .get(5, TimeUnit.SECONDS);
             if (CollectionUtils.isEmpty(nodes)) {
-                return Collections.emptyList();
+               throw new IllegalArgumentException("Cannot connect to Kafka: " + kafkaProperties.getProperty("bootstrap.servers"));
             }
-            return nodes;
+            return new ArrayList<>(nodes);
         } catch (Throwable exception) {
             log.error("Error happen when get brokers in backend cluster {}", kafkaProperties.getProperty("bootstrap.servers"), exception);
+            throw new IllegalArgumentException("Cannot connect to Kafka: " + kafkaProperties.getProperty("bootstrap.servers"));
         }
-        return Collections.emptyList();
     }
 
 }
