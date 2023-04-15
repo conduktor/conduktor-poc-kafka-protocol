@@ -24,5 +24,6 @@ public record InterceptorContext (
         DirectionType direction,
         RequestHeader requestHeader,
         Map<String,Object> inFlightInfo,
-        InetSocketAddress clientAddress){
+        InetSocketAddress clientAddress,
+        Integer brokerId){
 }

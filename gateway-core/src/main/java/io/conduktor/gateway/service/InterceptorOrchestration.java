@@ -51,7 +51,7 @@ public class InterceptorOrchestration {
 
         // we should only reset inflight info on request and on the first interceptor in the chain
         if (interceptContext.getDirectionType().equals(DirectionType.REQUEST)) {
-            interceptContext.getClientRequest().setInflightInfo(new HashMap<String,Object>());
+            interceptContext.getClientRequest().setInflightInfo(new HashMap<String, Object>());
         }
         return intercept(interceptContext, interceptors, input);
     }
@@ -75,8 +75,9 @@ public class InterceptorOrchestration {
         return interceptor.intercept(input, new InterceptorContext(
                 interceptContext.getDirectionType(),
                 interceptContext.getClientRequest().getGatewayRequestHeader(),
-                (Map<String,Object>) interceptContext.getClientRequest().getInflightInfo(),
-                interceptContext.getClientRequest().getClientChannel().remoteAddress()));
+                (Map<String, Object>) interceptContext.getClientRequest().getInflightInfo(),
+                interceptContext.getClientRequest().getClientChannel().remoteAddress(),
+                interceptContext.getBrokerId()));
     }
 
 }
