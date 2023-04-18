@@ -17,23 +17,22 @@ package io.conduktor.gateway.interceptor;
 
 import org.apache.kafka.common.requests.AbstractRequestResponse;
 
-import java.lang.reflect.Modifier;
 import java.util.*;
 
 public interface Plugin {
 
-    List<Interceptor> getInterceptors(Map<String,Object> config) throws InterceptorConfigurationException;
+    List<InterceptorProvider<?>> getInterceptors(Map<String, Object> config) throws InterceptorConfigurationException;
 
     default String pluginId() {
         return this.getClass().getCanonicalName();
     }
 
-    default Map<Class<?>, List<Interceptor>> getTypedInterceptors(Map<String,Object> config) throws InterceptorConfigurationException {
-        var result = new HashMap<Class<?>, List<Interceptor>>();
+    default Map<Class<?>, List<Interceptor<? extends AbstractRequestResponse>>> getTypedInterceptors(Map<String, Object> config) throws InterceptorConfigurationException {
+        var result = new HashMap<Class<?>, List<Interceptor<?>>>();
         getInterceptors(config)
                 .forEach(interceptor -> {
                     result.putIfAbsent(interceptor.type(), new ArrayList<>());
-                    result.get(interceptor.type()).add(interceptor);
+                    result.get(interceptor.type()).add(interceptor.interceptor());
                 });
         return result;
     }

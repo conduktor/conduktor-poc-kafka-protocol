@@ -44,11 +44,6 @@ public class ProduceLoggerInterceptor implements Interceptor<ProduceRequest> {
         return CompletableFuture.completedFuture(input);
     }
 
-    @Override
-    public Class<ProduceRequest> type() {
-        return ProduceRequest.class;
-    }
-
     private String getAuditEntry(InterceptorContext interceptorContext) {
         return interceptorContext.requestHeader().clientId();
     }

@@ -30,9 +30,4 @@ public class FetchResponseLoggerInterceptor implements Interceptor<FetchResponse
         log.warn("Fetch from client {} was responded to", interceptorContext.inFlightInfo().get("source"));
         return CompletableFuture.completedFuture(input);
     }
-
-    @Override
-    public Class<FetchResponse> type() {
-        return FetchResponse.class;
-    }
 }

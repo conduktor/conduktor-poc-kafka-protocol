@@ -18,6 +18,7 @@ package io.conduktor.gateway.service;
 import io.conduktor.gateway.config.InterceptorConfigEntry;
 import io.conduktor.gateway.config.InterceptorPluginConfig;
 import io.conduktor.gateway.config.GatewayConfiguration;
+import io.conduktor.gateway.interceptor.Interceptor;
 import io.conduktor.gateway.interceptor.InterceptorConfigurationException;
 import io.conduktor.gateway.interceptor.InterceptorValue;
 import io.conduktor.gateway.interceptor.Plugin;
@@ -76,7 +77,7 @@ public class InterceptorPoolService {
             entry.getKey().getTypedInterceptors(config).forEach((type, interceptorsForType) -> {
                 interceptors.putIfAbsent(type, new ArrayList<>());
                 interceptors.get(type).addAll(interceptorsForType.stream()
-                        .map(interceptor -> new InterceptorValue(interceptor, entry.getValue().getPriority(), entry.getValue().getTimeoutMs()))
+                        .map(interceptor -> new InterceptorValue((Interceptor<AbstractRequestResponse>) interceptor, entry.getValue().getPriority(), entry.getValue().getTimeoutMs()))
                         .toList());
             });
         }

@@ -36,9 +36,4 @@ public class AllLoggerInterceptor implements Interceptor<AbstractRequestResponse
         log.warn("{}, a {} was sent/received", prefix, input.getClass());
         return CompletableFuture.completedFuture(input);
     }
-
-    @Override
-    public Class<AbstractRequestResponse> type() {
-        return AbstractRequestResponse.class;
-    }
 }
