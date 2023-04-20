@@ -21,18 +21,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.kafka.clients.admin.Admin;
 import org.apache.kafka.common.Node;
-import org.apache.kafka.common.config.ConfigResource;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class ClientService {
-
-    public static final long DEFAULT_REQUEST_TIMEOUT_MS = 30_000L;
     private final Properties kafkaConnectionProperties;
 
     @Inject
@@ -68,30 +64,6 @@ public class ClientService {
             log.error("Error happen when get brokers in backend cluster {}", kafkaProperties.getProperty("bootstrap.servers"), exception);
         }
         return Collections.emptyList();
-    }
-
-    public long getKafkaRequestTimeoutMs() {
-        var node = getAvailableKafkaNode(kafkaConnectionProperties);
-        return getKafkaRequestTimeoutMs(node);
-    }
-
-    public long getKafkaRequestTimeoutMs(Node kafkaNode) {
-        try (var admin = getAdminClient()) {
-            var config = admin.describeConfigs(List.of(new ConfigResource(ConfigResource.Type.BROKER, kafkaNode.idString())))
-                    .all()
-                    .get(5, TimeUnit.SECONDS)
-                    .values()
-                    .iterator()
-                    .next();
-            var requestTimeoutMs = config.entries()
-                    .stream()
-                    .filter(configEntry -> "request.timeout.ms".equals(configEntry.name()))
-                    .findFirst();
-            return requestTimeoutMs.map(configEntry -> Long.parseLong(configEntry.value()))
-                    .orElse(DEFAULT_REQUEST_TIMEOUT_MS);
-        } catch (Throwable ex) {
-            return DEFAULT_REQUEST_TIMEOUT_MS;
-        }
     }
 
 }

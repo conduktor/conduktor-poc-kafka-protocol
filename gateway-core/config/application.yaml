@@ -4,7 +4,7 @@ kafkaSelector:
 interceptors:
   - name: loggingInterceptor
     pluginClass: io.conduktor.example.loggerinterceptor.LoggerInterceptorPlugin
-    timeoutMs: 30000 #optional. default timeoutMs = request.timeout.ms of kafka
+    timeoutMs: 30000 #optional, default timeoutMs = 30s
     priority: 100
     config:
       - key: "loggingStyle"

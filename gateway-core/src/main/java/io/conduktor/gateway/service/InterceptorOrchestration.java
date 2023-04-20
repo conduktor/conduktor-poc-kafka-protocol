@@ -26,7 +26,6 @@ import javax.inject.Inject;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -37,12 +36,10 @@ import static java.util.stream.Collectors.toCollection;
 @Slf4j
 public class InterceptorOrchestration {
     private final InterceptorPoolService interceptorPoolService;
-    private final long kafkaRequestTimeoutMs;
 
     @Inject
-    public InterceptorOrchestration(InterceptorPoolService interceptorPoolService, ClientService clientService) {
+    public InterceptorOrchestration(InterceptorPoolService interceptorPoolService) {
         this.interceptorPoolService = interceptorPoolService;
-        this.kafkaRequestTimeoutMs = clientService.getKafkaRequestTimeoutMs();
     }
 
     public CompletionStage<AbstractRequestResponse> intercept(InterceptContext interceptContext, AbstractRequestResponse input) {
@@ -74,12 +71,6 @@ public class InterceptorOrchestration {
     private CompletionStage<AbstractRequestResponse> intercept(InterceptContext interceptContext,
                                                                InterceptorValue interceptorValue,
                                                                AbstractRequestResponse input) {
-        Long requestTimeout = interceptorValue.timeoutMs();
-        if (Objects.isNull(requestTimeout)) {
-            requestTimeout = kafkaRequestTimeoutMs;
-        } else if (requestTimeout > kafkaRequestTimeoutMs || requestTimeout == 0L) {
-            requestTimeout = kafkaRequestTimeoutMs;
-        }
         return interceptorValue.interceptor()
                 .intercept(input, new InterceptorContext(
                         interceptContext.getDirectionType(),
@@ -87,7 +78,7 @@ public class InterceptorOrchestration {
                         (Map<String, Object>) interceptContext.getClientRequest().getInflightInfo(),
                         interceptContext.getClientRequest().getClientChannel().remoteAddress()))
                 .toCompletableFuture()
-                .orTimeout(requestTimeout, TimeUnit.MILLISECONDS);
+                .orTimeout(interceptorValue.timeoutMs(), TimeUnit.MILLISECONDS);
     }
 
 }
