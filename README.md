@@ -1,3 +1,8 @@
+<img src="https://www.conduktor.io/svgs/logo/black.svg" width="256">
+
+[![build](https://github.com/conduktor/conduktor-gateway/actions/workflows/build.yml/badge.svg)](https://github.com/conduktor/conduktor-gateway/actions/workflows/build.yml)
+
+
 # Conduktor Gateway — a Kafka transformer platform
 
 Conduktor Gateway is a tool to intercept and then filter and transform requests and responses between clients and Apache
@@ -32,7 +37,7 @@ $ mvn clean package                # build the .jar, requires Java 17+
 ### Start Conduktor Gateway:
 
 ```bash
-$ export CLASSPATH=logger-interceptor/target/logger-interceptor-0.1.0-SNAPSHOT.jar # Add the logger interceptor to the classpath, or add your own interceptor jar files here
+$ export CLASSPATH=logger-interceptor/target/logger-interceptor-0.2.0-SNAPSHOT.jar # Add the logger interceptor to the classpath, or add your own interceptor jar files here
 $ bin/run-gateway.sh
 ```
 
@@ -185,11 +190,11 @@ Alternatively, these configs can be provided using environment variables as foll
 
 ### Host/Port Configurations
 
-| Environment Variable | Default Value                                              | Description                                                                                                                                                                                                                                                                                                     |
-|----------------------|------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `GATEWAY_BIND_HOST`  | `0.0.0.0`                                                  | The host on which to bind the gateway                                                                                                                                                                                                                                                                           |
-| `GATEWAY_HOST`       | `localhost`                                                | The gateway hostname that should be presented to clients in the Apache Kafka Response flows (similar to advertised listener)                                                                                                                                                                                    |
-| `GATEWAY_PORT_RANGE` | `6969:6975`                                                | A range of ports to be opened on the Conduktor Gateway host, each port in this range will correspond to a broker in the Kafka cluster so it must be at least as large as the broker count of the Kafka cluster. We recommend it is double the size of the Kafka cluster to allow for expansion and reassignment |
+| Environment Variable | Default Value                                              | Description                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+|----------------------|------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `GATEWAY_BIND_HOST`  | `0.0.0.0`                                                  | The host on which to bind the gateway                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `GATEWAY_HOST`       | `localhost`                                                | The gateway hostname that should be presented to clients in the Apache Kafka Response flows (similar to advertised listener)                                                                                                                                                                                                                                                                                                                   |
+| `GATEWAY_PORT_RANGE` | `6969:6975`                                                | A range of ports to be opened on the Conduktor Gateway host, each port in this range will correspond to a broker in the Kafka cluster so it must be at least as large as the broker count of the Kafka cluster. We recommend it is double the size of the Kafka cluster to allow for expansion and reassignment. If **number of ports** is **less** than **number of kafka broker**, the gateway will be **shutdown** with exit code **5005**. |
 
 ### Authentication Configurations
 

@@ -43,11 +43,13 @@ import io.micrometer.prometheus.PrometheusConfig;
 import io.micrometer.prometheus.PrometheusMeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.kafka.common.Node;
 import org.apache.kafka.common.utils.SystemTime;
 import org.apache.kafka.common.utils.Time;
 
 import javax.inject.Named;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -130,6 +132,14 @@ public class DependencyInjector extends AbstractModule {
     @Named("kafkaServerProperties")
     Properties kafkaServerProperties(KafkaPropertiesProvider kafkaProvider) throws IOException {
         return kafkaProvider.loadKafkaProperties();
+    }
+
+
+    @Provides
+    @Singleton
+    @Named("kafkaNodes")
+    List<Node> kafkaNodes(ClientService clientService) throws IOException {
+        return clientService.getKafkaNodes();
     }
 
     @Override

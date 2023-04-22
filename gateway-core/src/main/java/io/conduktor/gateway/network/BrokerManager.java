@@ -34,6 +34,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.kafka.common.Node;
 import org.apache.kafka.common.message.DescribeClusterResponseData;
 import org.apache.kafka.common.message.MetadataResponseData;
@@ -66,7 +67,6 @@ public abstract class BrokerManager implements AutoCloseable {
 
     protected final MetricsRegistryProvider metricsRegistryProvider;
     protected final String gatewayHost;
-    protected final String kafkaBootstrapServer;
     protected final GatewayBrokers gatewayBrokers;
     private final ConcurrentHashMap<GatewayChannel, Integer> channels = new ConcurrentHashMap<>();
     protected AuthenticationConfig authenticationConfig;
@@ -76,12 +76,11 @@ public abstract class BrokerManager implements AutoCloseable {
     private Map<String, SslContext> expandedKeystore;
 
     public BrokerManager(
-            Properties properties,
+            List<Node> nodes,
             AuthenticationConfig authenticationConfig,
             HostPortConfiguration hostPortConfiguration,
             MetricsRegistryProvider metricsRegistryProvider,
-            GatewayBrokers gatewayBrokers,
-            ClientService clientService) {
+            GatewayBrokers gatewayBrokers) {
         this.authenticationConfig = authenticationConfig;
         this.gatewayHost = hostPortConfiguration.getGatewayHost();
         this.metricsRegistryProvider = metricsRegistryProvider;
@@ -92,8 +91,12 @@ public abstract class BrokerManager implements AutoCloseable {
             loadExpandedKeyStore();
         }
         this.channelInitializerSupplier = nettyChannelInitializerSupplier();
-        this.kafkaBootstrapServer = properties.getProperty(BOOTSTRAP_SERVERS);
-        this.firstNode = clientService.getAvailableKafkaNode(properties);
+        if (CollectionUtils.isEmpty(nodes)){
+            throw new IllegalArgumentException("Cannot connect to Kafka");
+        }
+        this.firstNode =  nodes.stream()
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Cannot connect to Kafka"));
     }
 
     public void setUpstreamResourceAndStartBroker(UpStreamResource upStreamResource) {
@@ -223,7 +226,8 @@ public abstract class BrokerManager implements AutoCloseable {
             var gatewayThread = (GatewayThread) upStreamResource.next();
             SecurityHandler authenticator = switch (authenticationConfig.getAuthenticatorType()) {
                 case NONE, SSL -> new NoneSecurityHandler();
-                case SASL_PLAINTEXT, SASL_SSL -> new SaslSecurityHandler(gatewayThread, new BasicUserPoolSaslAuthentication(authenticationConfig.getUserPool()), gatewaySocketChannel, metricsRegistryProvider);
+                case SASL_PLAINTEXT, SASL_SSL ->
+                        new SaslSecurityHandler(gatewayThread, new BasicUserPoolSaslAuthentication(authenticationConfig.getUserPool()), gatewaySocketChannel, metricsRegistryProvider);
             };
             var gatewayChannel = new GatewayChannel(authenticator, this, gatewaySocketChannel, gatewayThread, gatewayHost);
             authenticator.setGatewayChannel(gatewayChannel);

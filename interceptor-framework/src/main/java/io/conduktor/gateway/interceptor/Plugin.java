@@ -25,14 +25,14 @@ public interface Plugin {
     int EXPECTED_PARAMETER_COUNT = 2;
     String INTERCEPT_METHOD = "intercept";
 
-    void configure(Map<String,Object> config);
+    void configure(Map<String,Object> config) throws InterceptorConfigurationException;
 
     List<Interceptor> getInterceptors();
 
     default Map<Class<?>, List<Interceptor>> getTypedInterceptors() {
         var typedInterceptors = new HashMap<Class<?>, List<Interceptor>>();
         getInterceptors().forEach(gatewayInterceptor -> {
-            var requestType = Arrays.stream(gatewayInterceptor.getClass().getDeclaredMethods())
+            var requestType = Arrays.stream(gatewayInterceptor.getClass().getMethods())
                     .filter(method -> Modifier.isPublic(method.getModifiers()) &&
                             !method.isBridge() &&
                             method.getName().equals(INTERCEPT_METHOD) &&

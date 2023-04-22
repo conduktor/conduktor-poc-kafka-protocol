@@ -17,16 +17,19 @@ package io.conduktor.gateway;
 
 
 import io.conduktor.gateway.config.*;
+import io.conduktor.gateway.config.support.Messages;
 import io.conduktor.gateway.network.BrokerManager;
 import io.conduktor.gateway.network.BrokerManagerWithPortMapping;
 import io.conduktor.gateway.network.GatewayBrokers;
-import io.conduktor.gateway.service.ClientService;
 import io.conduktor.gateway.thread.UpStreamResource;
 import io.conduktor.gateway.tls.KeyStoreConfig;
 import io.netty.channel.nio.NioEventLoopGroup;
+import mockit.Mock;
+import mockit.MockUp;
 import org.apache.kafka.common.Node;
 import org.apache.kafka.common.message.MetadataResponseData;
 import org.apache.kafka.common.message.MetadataResponseData.MetadataResponseBrokerCollection;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
@@ -34,16 +37,18 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static io.conduktor.gateway.common.NodeUtils.keyOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 class BrokerManagerWithPortMappingTest {
 
@@ -87,16 +92,12 @@ class BrokerManagerWithPortMappingTest {
 
     @BeforeEach
     void setUp() {
-        var mockClientService = Mockito.mock(ClientService.class);
-        when(mockClientService.getAvailableKafkaNode(any(Properties.class)))
-                .thenReturn(new Node(-1, FIRST_HOST, KAFKA_PORT));
         brokerManager = new BrokerManagerWithPortMapping(
-                PROPERTIES,
+                List.of(new Node(-1, FIRST_HOST, KAFKA_PORT)),
                 GATEWAY_BROKERS,
                 HOST_PORT_CONFIGURATION,
                 AUTHENTICATION_CONFIG,
-                null,
-                mockClientService);
+                null);
         brokerManager.setUpstreamResourceAndStartBroker(UP_STREAM_RESOURCE);
         Mockito.clearInvocations(UP_STREAM_RESOURCE);
         Mockito.clearInvocations(GATEWAY_BROKERS);
@@ -187,17 +188,12 @@ class BrokerManagerWithPortMappingTest {
     @Test
     void testGetMappingWithAddingNewNode() {
         var broker1 = initBroker(1);
-        var keyHost1 = getKey(broker1);
         var broker2 = initBroker(2);
-        var keyHost2 = getKey(broker2);
         var broker3 = initBroker(3);
-        var keyHost3 = getKey(broker3);
         var broker4 = initBroker(4);
-        var keyHost4 = getKey(broker4);
         var responseBrokers = Arrays.asList(broker1, broker2, broker3, broker4);
         Collections.shuffle(responseBrokers);
-        var mappings = brokerManager.getRealToGatewayMap(new MetadataResponseBrokerCollection(responseBrokers.iterator()));
-        var port = BASE_PORT;
+        brokerManager.getRealToGatewayMap(new MetadataResponseBrokerCollection(responseBrokers.iterator()));
     }
 
 
@@ -249,6 +245,65 @@ class BrokerManagerWithPortMappingTest {
         verify(GATEWAY_BROKERS, Mockito.times(0)).activateBroker(anyInt());
     }
 
+    @Test
+    public void testGateway_shouldShutdown_whenInitBrokerPortMappingNotEnoughPort() {
+        var exitCode = new AtomicInteger(0);
+        new MockUp<System>() {
+            @Mock
+            public void exit(int value) {
+                exitCode.set(value);
+                throw new RuntimeException(String.valueOf(value));
+            }
+        };
+
+        var hostPortConfiguration = new HostPortConfiguration();
+        hostPortConfiguration.setPortRange("6969:6969");
+        hostPortConfiguration.setGatewayHost(GATEWAY_HOST);
+        hostPortConfiguration.setGatewayBindHost(BIND_HOST);
+        Assertions.assertThatThrownBy(() -> new BrokerManagerWithPortMapping(
+                        List.of(new Node(-1, FIRST_HOST, KAFKA_PORT), new Node(-1, FIRST_HOST, KAFKA_PORT)),
+                        GATEWAY_BROKERS,
+                        hostPortConfiguration,
+                        AUTHENTICATION_CONFIG,
+                        null))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage(String.valueOf(Messages.PORT_NOT_ENOUGH_EXIT_CODE));
+    }
+
+
+
+    @Test
+    public void testGateway_shouldShutdown_whenDoesNotHaveEnoughPort() throws IllegalAccessException, NoSuchFieldException {
+        var exitCode = new AtomicInteger(0);
+        new MockUp<System>() {
+            @Mock
+            public void exit(int value) {
+                exitCode.set(value);
+                throw new RuntimeException(String.valueOf(value));
+            }
+        };
+        var brokerManager = new BrokerManagerWithPortMapping(
+                List.of(new Node(-1, FIRST_HOST, KAFKA_PORT)),
+                GATEWAY_BROKERS,
+                HOST_PORT_CONFIGURATION,
+                AUTHENTICATION_CONFIG,
+                null);
+        brokerManager.setUpstreamResourceAndStartBroker(UP_STREAM_RESOURCE);
+        var broker1 = initBroker(1);
+        var broker2 = initBroker(2);
+        var broker3 = initBroker(3);
+        var broker4 = initBroker(4);
+        var responseBrokers = Arrays.asList(broker1, broker2, broker3, broker4);
+        Collections.shuffle(responseBrokers);
+        Field gatewayPortsField = BrokerManagerWithPortMapping.class.getDeclaredField("gatewayPorts");
+        gatewayPortsField.setAccessible(true);
+        gatewayPortsField.set(brokerManager, List.of(1));
+        Assertions.assertThatThrownBy(() -> brokerManager.getRealToGatewayMap(new MetadataResponseBrokerCollection(responseBrokers.iterator())))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage(String.valueOf(Messages.PORT_NOT_ENOUGH_EXIT_CODE));
+    }
+
+
     private void assertMapping(Endpoint endpoint, String gatewayHost, int gatewayPort) {
         assertThat(endpoint.getHost()).isEqualTo(gatewayHost);
         assertThat(endpoint.getPort()).isEqualTo(gatewayPort);
@@ -264,10 +319,6 @@ class BrokerManagerWithPortMappingTest {
 
     private Node toNode(MetadataResponseData.MetadataResponseBroker responseBroker) {
         return new Node(responseBroker.nodeId(), responseBroker.host(), responseBroker.port());
-    }
-
-    private Endpoint toBindingEndpoint(int port) {
-        return new Endpoint(GATEWAY_HOST, port);
     }
 
     private String getKey(MetadataResponseData.MetadataResponseBroker brokerResponse) {
