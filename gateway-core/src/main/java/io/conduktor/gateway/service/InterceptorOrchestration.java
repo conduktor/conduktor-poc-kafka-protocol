@@ -16,10 +16,10 @@
 package io.conduktor.gateway.service;
 
 import io.conduktor.gateway.interceptor.DirectionType;
-import io.conduktor.gateway.interceptor.Interceptor;
 import io.conduktor.gateway.interceptor.InterceptorContext;
 import io.conduktor.gateway.interceptor.InterceptorValue;
 import io.conduktor.gateway.model.InterceptContext;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.requests.AbstractRequestResponse;
 
 import javax.inject.Inject;
@@ -29,13 +29,13 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.TimeUnit;
 
 import static java.util.stream.Collectors.toCollection;
 
+@Slf4j
 public class InterceptorOrchestration {
-
     private final InterceptorPoolService interceptorPoolService;
-
 
     @Inject
     public InterceptorOrchestration(InterceptorPoolService interceptorPoolService) {
@@ -46,37 +46,39 @@ public class InterceptorOrchestration {
 
         var interceptors = interceptorPoolService.getAllInterceptors(input.getClass()).stream()
                 .sorted(Comparator.comparingInt(InterceptorValue::priority))
-                .map(InterceptorValue::interceptor)
                 .collect(toCollection(ConcurrentLinkedQueue::new));
 
         // we should only reset inflight info on request and on the first interceptor in the chain
         if (interceptContext.getDirectionType().equals(DirectionType.REQUEST)) {
-            interceptContext.getClientRequest().setInflightInfo(new HashMap<String,Object>());
+            interceptContext.getClientRequest().setInflightInfo(new HashMap<String, Object>());
         }
         return intercept(interceptContext, interceptors, input);
     }
 
     private CompletionStage<AbstractRequestResponse> intercept(InterceptContext interceptContext,
-                                                               ConcurrentLinkedQueue<Interceptor<AbstractRequestResponse>> interceptors,
+                                                               ConcurrentLinkedQueue<InterceptorValue> interceptorValues,
                                                                AbstractRequestResponse input) {
-        if (interceptors.isEmpty()) {
+        if (interceptorValues.isEmpty()) {
             return CompletableFuture.completedFuture(input);
         }
 
-        return intercept(interceptContext, interceptors.poll(), input)
-                .thenCompose(intercepted -> intercept(interceptContext, interceptors, intercepted));
+        return intercept(interceptContext, interceptorValues.poll(), input)
+                .thenCompose(intercepted -> intercept(interceptContext, interceptorValues, intercepted));
     }
 
 
     @SuppressWarnings("unchecked")
     private CompletionStage<AbstractRequestResponse> intercept(InterceptContext interceptContext,
-                                                               Interceptor<AbstractRequestResponse> interceptor,
+                                                               InterceptorValue interceptorValue,
                                                                AbstractRequestResponse input) {
-        return interceptor.intercept(input, new InterceptorContext(
-                interceptContext.getDirectionType(),
-                interceptContext.getClientRequest().getGatewayRequestHeader(),
-                (Map<String,Object>) interceptContext.getClientRequest().getInflightInfo(),
-                interceptContext.getClientRequest().getClientChannel().remoteAddress()));
+        return interceptorValue.interceptor()
+                .intercept(input, new InterceptorContext(
+                        interceptContext.getDirectionType(),
+                        interceptContext.getClientRequest().getGatewayRequestHeader(),
+                        (Map<String, Object>) interceptContext.getClientRequest().getInflightInfo(),
+                        interceptContext.getClientRequest().getClientChannel().remoteAddress()))
+                .toCompletableFuture()
+                .orTimeout(interceptorValue.timeoutMs(), TimeUnit.MILLISECONDS);
     }
 
 }

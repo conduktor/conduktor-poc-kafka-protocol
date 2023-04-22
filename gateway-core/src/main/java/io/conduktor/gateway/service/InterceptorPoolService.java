@@ -75,7 +75,7 @@ public class InterceptorPoolService {
                     interceptors.put(type, new ArrayList<>());
                 }
                 interceptors.get(type).addAll(interceptorsForType.stream()
-                        .map(interceptor -> new InterceptorValue(interceptor, config.getPriority()))
+                        .map(interceptor -> new InterceptorValue(interceptor, config.getPriority(), config.getTimeoutMs()))
                         .toList());
             });
         }

@@ -16,11 +16,10 @@
 package io.conduktor.gateway.integration.interceptor;
 
 import io.conduktor.gateway.integration.BaseGatewayIntegrationTest;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.common.protocol.ApiKeys;
-import org.apache.kafka.common.requests.*;
+import org.apache.kafka.common.requests.AbstractRequestResponse;
+import org.apache.kafka.common.requests.AbstractResponse;
+import org.apache.kafka.common.requests.FetchRequest;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -35,7 +34,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -45,7 +43,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class LoggerInterceptorPluginIntegrationTest extends BaseGatewayIntegrationTest {
 
-    public static final String TEST_CLIENT_001 = "testClient001";
     public static final String SOME_KEY = "someKey";
     public static final String SOME_VALUE = "someValue";
     public static final String LOGGERINTERCEPTOR_PACKAGE = "io.conduktor.gateway.integration.interceptor";
@@ -67,17 +64,17 @@ public class LoggerInterceptorPluginIntegrationTest extends BaseGatewayIntegrati
 
         var logStream = new ByteArrayOutputStream();
         var logWriter = new PrintWriter(logStream);
-        addAppender(logWriter, "logWriter");
+        addAppender(logWriter, "testInterceptsProduceMessages");
         Configurator.setLevel(LOGGERINTERCEPTOR_PACKAGE, Level.DEBUG);
 
         try (var gatewayProducer = clientFactory.gatewayProducer()) {
-            ProducerRecord<String, String> record1 = new ProducerRecord(clientTopic, SOME_KEY, SOME_VALUE);
+            ProducerRecord<String, String> record1 = new ProducerRecord<>(clientTopic, SOME_KEY, SOME_VALUE);
             gatewayProducer.send(record1).get();
         }
 
         logWriter.flush();
         // global interceptor
-        assertThat(new String(logStream.toByteArray())
+        assertThat(logStream.toString()
                 .contains("Hello there, a class org.apache.kafka.common.requests.ProduceResponse was sent/received"))
                 .isEqualTo(true);
     }
@@ -89,22 +86,22 @@ public class LoggerInterceptorPluginIntegrationTest extends BaseGatewayIntegrati
 
         var logStream = new ByteArrayOutputStream();
         var logWriter = new PrintWriter(logStream);
-        addAppender(logWriter, "logWriter");
+        addAppender(logWriter, "testInterceptsFetchMessages");
         Configurator.setLevel(LOGGERINTERCEPTOR_PACKAGE, Level.DEBUG);
 
         try (var gatewayConsumer = clientFactory.gatewayConsumer(getGroup())) {
             gatewayConsumer.subscribe(Collections.singletonList(clientTopic));
-            IntStream.range(0,100).forEach(index ->
-            gatewayConsumer.poll(Duration.ofMillis(100)));
+            IntStream.range(0, 100).forEach(index ->
+                    gatewayConsumer.poll(Duration.ofMillis(100)));
         }
 
         logWriter.flush();
         // global interceptor
-        assertThat(new String(logStream.toByteArray())
+        assertThat(logStream.toString()
                 .contains("Hello there, a class org.apache.kafka.common.requests.LeaveGroupResponse was sent/received"))
                 .isEqualTo(true);
         // fetch interceptor
-        assertThat(new String(logStream.toByteArray())
+        assertThat(logStream.toString()
                 .contains("Fetch was requested from localhost"))
                 .isEqualTo(true);
     }

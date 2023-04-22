@@ -40,8 +40,17 @@ public class InterceptorPluginConfig {
     @Min(1)
     @Max(Integer.MAX_VALUE)
     private int priority = Integer.MAX_VALUE;
+    @Min(0)
+    @Max(Long.MAX_VALUE)
+    private Long timeoutMs;
     @Valid
     @NotNull
     private List<InterceptorConfigEntry> config;
 
+    public InterceptorPluginConfig(String name, String pluginClass, int priority, List<InterceptorConfigEntry> config) {
+        this.name = name;
+        this.pluginClass = pluginClass;
+        this.priority = priority;
+        this.config = config;
+    }
 }

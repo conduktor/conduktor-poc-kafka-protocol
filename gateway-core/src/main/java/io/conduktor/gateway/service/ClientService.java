@@ -27,7 +27,6 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class ClientService {
-
     private final Properties kafkaConnectionProperties;
 
     @Inject
