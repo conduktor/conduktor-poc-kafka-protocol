@@ -38,9 +38,9 @@ An `Plugin` returns a list of all the interceptors in the shape of `InterceptorP
 
 It also processes the interceptor configuration, which is specified in `application.yaml`.
 
-### Interceptor jar
+### Interceptor framework jar
 
-The Interceptor jar file contains the `Interceptor.java` implementations and the `Plugin.java` implementation.  The jar file should be added to the classpath of your gateway to provide access to the Interceptor functionality.
+The Interceptor framework jar file contains the `Interceptor.java` implementations and the `Plugin.java` implementation.  The jar file should be added to the classpath of your gateway to provide access to the Interceptor functionality.
 
 # Details
 
@@ -234,9 +234,15 @@ The interceptors could be provided conditionally based on configuration, for exa
 
 **Note:** Remember that `AbstractRequest` is applicable to both requests and responses.
 
+## Register your plugins
+
+All implementation `Plugin` should be registered as services following Java [ServiceLoader](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ServiceLoader.html).
+
+For that you need to add a file into `META-INF/services/io.conduktor.gateway.interceptor.Plugin` with all your implementations.
+
 
 # Next Steps
-Once you have implemented the `Interceptor.java` and `Plugin.java` interfaces, the next step is to build your changes into a standalone jar file.
+Once you have implemented the `Interceptor.java` and `Plugin.java` interfaces, the next step is to build your changes into a standalone jar file providing your plugins as Java services.
 
 The pom.xml in the loggerInterceptor package demonstrates one way to do this.
 
