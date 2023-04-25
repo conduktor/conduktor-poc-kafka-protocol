@@ -17,8 +17,11 @@ package io.conduktor.example.loggerinterceptor;
 
 
 import io.conduktor.gateway.interceptor.Interceptor;
+import io.conduktor.gateway.interceptor.InterceptorConfigurationException;
+import io.conduktor.gateway.interceptor.InterceptorProvider;
 import io.conduktor.gateway.interceptor.Plugin;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.common.requests.*;
 
 import java.util.List;
 import java.util.Map;
@@ -26,23 +29,20 @@ import java.util.Map;
 @Slf4j
 public class LoggerInterceptorPlugin implements Plugin {
 
-    private String prefix;
     @Override
-    public void configure(Map<String, Object> config) {
-
+    public List<InterceptorProvider<?>> getInterceptors(Map<String, Object> config) {
+        String prefix = "";
         var loggingStyle = config.get("loggingStyle");
         if (loggingStyle.equals("obiWan")) {
-            this.prefix = "Hello there";
+            prefix = "Hello there";
         }
+        return List.of(
+                new InterceptorProvider<>(AbstractRequestResponse.class, new AllLoggerInterceptor(prefix)),
+                new InterceptorProvider<>(FetchRequest.class, new FetchRequestLoggerInterceptor()),
+                new InterceptorProvider<>(FetchResponse.class, new FetchResponseLoggerInterceptor()),
+                new InterceptorProvider<>(ProduceRequest.class, new ProduceLoggerInterceptor()),
+                new InterceptorProvider<>(AbstractResponse.class, new ResponseLoggerInterceptor())
+        );
     }
 
-    @SuppressWarnings("rawtypes")
-    @Override
-    public List<Interceptor> getInterceptors() {
-        return List.of(new AllLoggerInterceptor(prefix),
-                new FetchRequestLoggerInterceptor(),
-                new FetchResponseLoggerInterceptor(),
-                new ProduceLoggerInterceptor(),
-                new ResponseLoggerInterceptor());
-    }
 }

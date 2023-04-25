@@ -17,35 +17,23 @@ package io.conduktor.gateway.interceptor;
 
 import org.apache.kafka.common.requests.AbstractRequestResponse;
 
-import java.lang.reflect.Modifier;
 import java.util.*;
 
 public interface Plugin {
 
-    int EXPECTED_PARAMETER_COUNT = 2;
-    String INTERCEPT_METHOD = "intercept";
+    List<InterceptorProvider<?>> getInterceptors(Map<String, Object> config) throws InterceptorConfigurationException;
 
-    void configure(Map<String,Object> config) throws InterceptorConfigurationException;
+    default String pluginId() {
+        return this.getClass().getCanonicalName();
+    }
 
-    List<Interceptor> getInterceptors();
-
-    default Map<Class<?>, List<Interceptor>> getTypedInterceptors() {
-        var typedInterceptors = new HashMap<Class<?>, List<Interceptor>>();
-        getInterceptors().forEach(gatewayInterceptor -> {
-            var requestType = Arrays.stream(gatewayInterceptor.getClass().getMethods())
-                    .filter(method -> Modifier.isPublic(method.getModifiers()) &&
-                            !method.isBridge() &&
-                            method.getName().equals(INTERCEPT_METHOD) &&
-                            method.getParameterCount() == EXPECTED_PARAMETER_COUNT &&
-                            AbstractRequestResponse.class.isAssignableFrom(method.getParameterTypes()[0]) &&
-                            method.getParameterTypes()[1].equals(InterceptorContext.class))
-                    .findFirst().get()
-                    .getParameterTypes()[0];
-            if (!typedInterceptors.containsKey(requestType)) {
-                typedInterceptors.put(requestType, new ArrayList<>());
-            }
-            typedInterceptors.get(requestType).add(gatewayInterceptor);
-        });
-        return typedInterceptors;
+    default Map<Class<?>, List<Interceptor<? extends AbstractRequestResponse>>> getTypedInterceptors(Map<String, Object> config) throws InterceptorConfigurationException {
+        var result = new HashMap<Class<?>, List<Interceptor<?>>>();
+        getInterceptors(config)
+                .forEach(interceptor -> {
+                    result.putIfAbsent(interceptor.type(), new ArrayList<>());
+                    result.get(interceptor.type()).add(interceptor.interceptor());
+                });
+        return result;
     }
 }

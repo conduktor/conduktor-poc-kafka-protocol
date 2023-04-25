@@ -134,8 +134,10 @@ bootstrap.servers=localhost:9092
 ### Kafka Connection Configurations
 ```yaml
 kafkaSelector:
-  file:
-    path:  - the path to the file containing Kafka connection properties e.g. config/kafka.config
+  type: file|env
+  path: - the path to the file containing Kafka connection properties if type file  e.g. config/kafka.config
+  prefix: - the prefix to load the configuration for kafka from if type env
+ 
 ```
 
 ### Host/Port Configurations

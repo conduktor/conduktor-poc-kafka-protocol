@@ -18,6 +18,7 @@ package io.conduktor.gateway.service;
 import io.conduktor.gateway.config.InterceptorConfigEntry;
 import io.conduktor.gateway.config.InterceptorPluginConfig;
 import io.conduktor.gateway.config.GatewayConfiguration;
+import io.conduktor.gateway.interceptor.Interceptor;
 import io.conduktor.gateway.interceptor.InterceptorConfigurationException;
 import io.conduktor.gateway.interceptor.InterceptorValue;
 import io.conduktor.gateway.interceptor.Plugin;
@@ -27,23 +28,22 @@ import org.apache.kafka.common.requests.AbstractRequestResponse;
 import org.apache.kafka.common.requests.AbstractResponse;
 
 import javax.inject.Inject;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static io.conduktor.gateway.config.support.Messages.BAD_INTERCEPTOR_CONFIG;
 
 @SuppressWarnings("rawtypes")
 @Slf4j
 public class InterceptorPoolService {
 
     private final GatewayConfiguration gatewayConfiguration;
+    private final PluginLoader pluginLoader;
 
     private final Map<Class<?>, List<InterceptorValue>> interceptors = new HashMap<>();
 
     @Inject
-    public InterceptorPoolService(GatewayConfiguration gatewayConfiguration) {
+    public InterceptorPoolService(GatewayConfiguration gatewayConfiguration, PluginLoader pluginLoader) {
         this.gatewayConfiguration = gatewayConfiguration;
+        this.pluginLoader = pluginLoader;
         try {
             loadInterceptors();
         } catch (Exception e) {
@@ -53,29 +53,32 @@ public class InterceptorPoolService {
     }
 
     @SuppressWarnings("unchecked")
-    private void loadInterceptors() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, InterceptorConfigurationException {
+    private void loadInterceptors() throws InterceptorConfigurationException {
         validateInterceptorPluginConfigs(gatewayConfiguration.getInterceptors());
-        for (InterceptorPluginConfig config : gatewayConfiguration.getInterceptors()) {
-            Class classToInstantiate = Class.forName(config.getPluginClass());
-            // features must have a blank constructor
-            var plugin = (Plugin) classToInstantiate.getDeclaredConstructor().newInstance();
-            var pluginConfigs = config.getConfig().stream()
+        var pluginAndConfigs = pluginLoader.load()
+                .stream()
+                .flatMap(provider ->
+                        gatewayConfiguration.getInterceptors()
+                                .stream()
+                                .filter(interceptorConfig -> interceptorConfig.getPluginClass().equals(provider.pluginId()))
+                                .findFirst().stream().map(config -> Map.entry(provider, config)))
+                .peek(plugin -> log.info("Plugin {} detected with configuration.", plugin.getKey().pluginId()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        for (Map.Entry<Plugin, InterceptorPluginConfig> entry : pluginAndConfigs.entrySet()) {
+            var config = entry.getValue().getConfig().stream()
                     .peek(configValue -> {
                         if (Objects.isNull(configValue.getKey())) {
-                            throw new IllegalArgumentException("key for config " + config.getPluginClass() + " can not be null");
+                            throw new IllegalArgumentException("key for config " + entry.getValue().getPluginClass() + " can not be null");
                         }
                         if (Objects.isNull(configValue.getValue())) {
-                            throw new IllegalArgumentException("value for config " +  config.getPluginClass() + " of key " + configValue.getKey() +  " can not be null");
+                            throw new IllegalArgumentException("value for config " + entry.getValue().getPluginClass() + " of key " + configValue.getKey() + " can not be null");
                         }
                     })
                     .collect(Collectors.toMap(InterceptorConfigEntry::getKey, InterceptorConfigEntry::getValue));
-            plugin.configure(pluginConfigs);
-            plugin.getTypedInterceptors().forEach((type, interceptorsForType) -> {
-                if (!interceptors.containsKey(type)) {
-                    interceptors.put(type, new ArrayList<>());
-                }
+            entry.getKey().getTypedInterceptors(config).forEach((type, interceptorsForType) -> {
+                interceptors.putIfAbsent(type, new ArrayList<>());
                 interceptors.get(type).addAll(interceptorsForType.stream()
-                        .map(interceptor -> new InterceptorValue(interceptor, config.getPriority(), config.getTimeoutMs()))
+                        .map(interceptor -> new InterceptorValue((Interceptor<AbstractRequestResponse>) interceptor, entry.getValue().getPriority(), entry.getValue().getTimeoutMs()))
                         .toList());
             });
         }

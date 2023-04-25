@@ -17,6 +17,7 @@ package io.conduktor.gateway.integration.interceptor;
 
 import io.conduktor.gateway.interceptor.Interceptor;
 import io.conduktor.gateway.interceptor.InterceptorContext;
+import io.conduktor.gateway.interceptor.InterceptorProvider;
 import io.conduktor.gateway.interceptor.Plugin;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.requests.AbstractRequestResponse;
@@ -29,21 +30,19 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 public class TestInterceptorPlugin implements Plugin {
-    private String prefix;
-    @Override
-    public void configure(Map<String, Object> config) {
-        var loggingStyle = config.get("loggingStyle");
-        if (loggingStyle.equals("obiWan")) {
-            this.prefix = "Hello there";
-        }
-    }
 
     @SuppressWarnings("rawtypes")
     @Override
-    public List<Interceptor> getInterceptors() {
-        return List.of(new AllLoggerInterceptor(prefix),
-                new FetchRequestLoggerInterceptor(),
-                new FetchResponseLoggerInterceptor());
+    public List<InterceptorProvider<?>> getInterceptors(Map<String, Object> config) {
+        String prefix = "";
+        var loggingStyle = config.get("loggingStyle");
+        if (loggingStyle.equals("obiWan")) {
+            prefix = "Hello there";
+        }
+        return List.of(
+                new InterceptorProvider<>(AbstractRequestResponse.class, new AllLoggerInterceptor(prefix)),
+                new InterceptorProvider<>(FetchRequest.class, new FetchRequestLoggerInterceptor())
+        );
     }
 
     @Slf4j
@@ -59,6 +58,7 @@ public class TestInterceptorPlugin implements Plugin {
             log.warn("{}, a {} was sent/received", prefix, input.getClass());
             return CompletableFuture.completedFuture(input);
         }
+
     }
 
     @Slf4j

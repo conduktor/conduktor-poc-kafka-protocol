@@ -30,14 +30,17 @@ For example, a logging Interceptor may include two `Interceptor.java` implementa
 
 These are separate implementation classes as the processing of a `ProduceRequest` object is quite different to the processing on a `ConsumeResponse` object
 
+### `InterceptorProvider.java`
+The `InterceptorProvider.java` is a record class that provide an `Interceptor` and the target Kafka type to intercept.
+
 ### `Plugin.java`
-An `Plugin` returns a list of all the interceptors that combine to to make the function provided by the Interceptor.
+An `Plugin` returns a list of all the interceptors in the shape of `InterceptorProvider` that combine to make the function provided by the `Plugin`.
 
 It also processes the interceptor configuration, which is specified in `application.yaml`.
 
-### Interceptor jar
+### Interceptor framework jar
 
-The Interceptor jar file contains the `Interceptor.java` implementations and the `Plugin.java` implementation.  The jar file should be added to the classpath of your gateway to provide access to the Interceptor functionality.
+The Interceptor framework jar file contains the `Interceptor.java` implementations and the `Plugin.java` implementation.  The jar file should be added to the classpath of your gateway to provide access to the Interceptor functionality.
 
 # Details
 
@@ -99,10 +102,10 @@ Then use `Plugin` to provide both implementations to the Gateway to register it 
 
 ```java
 public class LoggerInterceptorPlugin implements Plugin {
-   public List<Interceptor> getInterceptors() {
+   public List<InterceptorProvider<?>> getInterceptors(Map<String, Object> config) throws InterceptorConfigurationException {
       return List.of(
-         new FetchLoggerInterceptor(),
-         new ProduceLoggerInterceptor()
+         new InterceptorProvider<>(FetchResponse.class, new FetchLoggerInterceptor()),
+         new InterceptorProvider<>(ProduceRequest.class, new ProduceLoggerInterceptor())
       );
    }
 }
@@ -124,9 +127,9 @@ Then use the `Plugin` to provide this implementation the Gateway to register it 
 
 ```java
 public class LoggerInterceptorPlugin implements InterceptorPlugin {
-   public List<Interceptor> getInterceptors() {
+   public List<InterceptorProvider<?>> getInterceptors(Map<String, Object> config) throws InterceptorConfigurationException {
       return List.of(
-         new RequestsLoggerInterceptor()
+         new InterceptorProvider<>(AbstractRequest.class, new RequestsLoggerInterceptor())
       );
    }
 }
@@ -148,16 +151,15 @@ Then use the `Plugin` to provide this implementation to the Gateway:
 
 ```java
 public class LoggerInterceptorPlugin implements Plugin {
-   public List<Interceptor> getInterceptors() {
+   public List<InterceptorProvider<?>> getInterceptors(Map<String, Object> config) throws InterceptorConfigurationException {
       return List.of(
-         new AllLoggerInterceptor()
+         new InterceptorProvider<>(AbstractRequestResponse.class, new AllLoggerInterceptor())
       );
    }
 }
 ```
 
 You should intercept `AbstractRequestResponse` if the interceptor needs to work on all requests and responses.  For example, you might want to write an audit record for all requests and responses passing through the gateway.
-
 
 ### CompletionStage
 
@@ -216,37 +218,31 @@ The next interceptor in the prioritised list of applicable interceptors will not
 
 ## `Plugin.java`
 
-`Plugin` defines two methods:
+`Plugin` defines one method:
 
 ```java
-void configure(Map<String,String> config);
-
-List<Interceptor> getInterceptors();
+List<InterceptorProvider<?>> getInterceptors(Map<String, Object> config) throws InterceptorConfigurationException;
 ```
 
-The `configure` method is used to process the interceptor configuration read from `application.yaml`.
-
-The `getInterceptors` method is used to populate the list of interceptors that this Interceptor jar provides.
-
-### `configure`
-
-Validation of the configuration passed in from the `application.yaml` file must be done by the `configure` method, and an appropriate error message returned, including a suggestion of an action to resolve the problem, if the configuration is not valid.
-
-The `configure` method is run during initialization of the Gateway, and the Gateway will fail to start if the configuration is invalid.
-
-The `configure` method can be used initialise this configuration on the individual interceptor instances.
+The `getInterceptors` method is used to populate the list of interceptors that this Interceptor jar provides based on the interceptor configuration read from `application.yaml`.  
 
 ### `getInterceptors`
 
-The `getInterceptors` method is used to provide a list of interceptors to the Gateway.  
+The `getInterceptors` method is used to provide a list of interceptors to the Gateway based on the interceptor configuration read from `application.yaml`.  
 
 The interceptors could be provided conditionally based on configuration, for example a logging interceptor could have a parameter “incoming_only : boolean”.  If only incoming requests are to be logged, then `getInterceptors` only returns the list of interceptors that apply to incoming requests.
 
 **Note:** Remember that `AbstractRequest` is applicable to both requests and responses.
 
+## Register your plugins
+
+All implementation `Plugin` should be registered as services following Java [ServiceLoader](https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/ServiceLoader.html).
+
+For that you need to add a file into `META-INF/services/io.conduktor.gateway.interceptor.Plugin` with all your implementations.
+
 
 # Next Steps
-Once you have implemented the `Interceptor.java` and `Plugin.java` interfaces, the next step is to build your changes into a standalone jar file.
+Once you have implemented the `Interceptor.java` and `Plugin.java` interfaces, the next step is to build your changes into a standalone jar file providing your plugins as Java services.
 
 The pom.xml in the loggerInterceptor package demonstrates one way to do this.
 

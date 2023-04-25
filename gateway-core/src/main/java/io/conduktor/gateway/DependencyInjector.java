@@ -168,7 +168,7 @@ public class DependencyInjector extends AbstractModule {
                 .toInstance(gatewayConfiguration.getInFlightRequestExpiryMs());
         bind(ClientService.class).in(Singleton.class);
         bind(GatewayCacheProvider.class).to(DefaultGatewayCacheProvider.class).in(Singleton.class);
-
+        bind(PluginLoader.class).toInstance(new PluginServiceLoader());
     }
 
 }
