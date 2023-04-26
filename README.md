@@ -16,54 +16,7 @@ client interactions.
 
 Conduktor Gateway comes with an included interceptor which writes log lines and information about the Kakfka traffic to stdout.
 
-The following Quick Start steps guide you through setting up the Gateway, the interceptor, and validating the configuration.
-
-### Get a Kafka instance:
-
-Follow step 1 and step 2 (Zookeeper or KRaft) from the  [Apache Kafka Quick Start](https://kafka.apache.org/quickstart) to start a single broker cluster running on your local system.
-
-OR
-
-Get the connection information for your existing Kafka cluster
-
-### Download and build
-
-```bash
-$ git clone https://github.com/conduktor/conduktor-gateway && cd conduktor-gateway
-$ code gateway-core/config/kafka.config   # Use the defaults, or update to include your existing Kafka cluster configuration.
-$ mvn clean package                # build the .jar, requires Java 17+
-```
-
-### Start Conduktor Gateway:
-
-```bash
-$ export CLASSPATH=logger-interceptor/target/logger-interceptor-0.4.0-SNAPSHOT.jar # Add the logger interceptor to the classpath, or add your own interceptor jar files here
-$ bin/run-gateway.sh
-```
-
-### Validate
-
-Test the APIs using the command line tools
-```bash
-cd <kafka_install_directory>
-bin/kafka-topics.sh --create --topic quickstart-events --bootstrap-server localhost:6969
-bin/kafka-console-producer.sh --topic quickstart-events --bootstrap-server localhost:6969
-bin/kafka-console-consumer.sh --topic quickstart-events --bootstrap-server localhost:6969 --from-beginning --property print.headers=true
-```
-
-Then look in the terminal where the gateway is running, you should find log lines, written by the loggerInterceptor, similar to:
-
-```
-Hello there, a class org.apache.kafka.common.requests.FetchResponse was sent/received 
-Produce was called with version: 9
-Fetch was requested from localhost
-```
-
-OR
-
-Update your Kafka Clients' `bootstrap.servers` to `localhost:6969` (the Gateway) and remove any authentication configuration. Note that Conduktor Gateway does not use the same authentication scheme as the backing Kafka cluster and so clients should be configured according to the authenticatorType configuration rather than what is configured in the Kafka cluster.
-
-Run your Kafka Client workload, and look for the log lines written to the terminal where Gateway is running.  These will include information about the flows passing through the Gateway from your application.
+The [Quick Start Guide](https://docs.conduktor.io/platform/gateway/installation/opensource-install/) describes how to run the Gateway and try the logging interceptor.
 
 # How to contribute to this project?
 
