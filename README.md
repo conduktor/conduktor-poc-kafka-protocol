@@ -16,7 +16,7 @@ client interactions.
 
 Conduktor Gateway comes with an included interceptor which writes log lines and information about the Kakfka traffic to stdout.
 
-The [Quick Start Guide](https://docs.conduktor.io/platform/gateway/installation/opensource-install/) describes how to run the Gateway and try the logging interceptor.
+If this is your first time starting Gateway, the [Quick Start Guide](https://docs.conduktor.io/platform/gateway/installation/opensource-install/) describes how to get setup and try the logging interceptor. Go here first!
 
 # How to contribute to this project?
 
