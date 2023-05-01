@@ -29,10 +29,3 @@ upstreamConnectionConfig:
   numOfConnection: 2
   #max idle time of connection from gateway to kafka server, if exceeded, the connection got killed.
   maxIdleTimeMs: 200000
-interceptors:
-  - name: testInterceptor
-    pluginClass: io.conduktor.gateway.integration.interceptor.TestInterceptorPlugin
-    priority: 100
-    config:
-      - key: "loggingStyle"
-        value: "obiWan"

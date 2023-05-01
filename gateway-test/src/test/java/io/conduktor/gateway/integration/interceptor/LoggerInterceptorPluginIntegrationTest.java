@@ -16,6 +16,9 @@
 package io.conduktor.gateway.integration.interceptor;
 
 import com.google.inject.AbstractModule;
+import io.conduktor.gateway.config.GatewayConfiguration;
+import io.conduktor.gateway.config.InterceptorConfigEntry;
+import io.conduktor.gateway.config.InterceptorPluginConfig;
 import io.conduktor.gateway.integration.BaseGatewayIntegrationTest;
 import io.conduktor.gateway.interceptor.Plugin;
 import io.conduktor.gateway.service.PluginLoader;
@@ -62,6 +65,20 @@ public class LoggerInterceptorPluginIntegrationTest extends BaseGatewayIntegrati
                 bind(PluginLoader.class).toInstance(() -> List.of(new TestInterceptorPlugin()));
             }
         };
+    }
+
+    @Override
+    protected void reconfigureGateway(GatewayConfiguration gatewayConfiguration) {
+        gatewayConfiguration
+                .setInterceptors(List.of(
+                        new InterceptorPluginConfig(
+                                "testInterceptor",
+                                "io.conduktor.gateway.integration.interceptor.TestInterceptorPlugin",
+                                100,
+                                List.of(
+                                        new InterceptorConfigEntry("loggingStyle", "obiWan")
+                                )
+                        )));
     }
 
     @Test
