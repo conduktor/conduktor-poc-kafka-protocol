@@ -39,7 +39,6 @@ jobs:
       with:
         path: "."
         fail-build: true
-        severity-cutoff: high
     - name: Upload vulnerability report
       uses: github/codeql-action/upload-sarif@v2
       with:
