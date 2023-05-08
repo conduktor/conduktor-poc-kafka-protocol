@@ -14,7 +14,7 @@ client interactions.
 
 # How to start?
 
-Conduktor Gateway comes with an included interceptor which writes log lines and information about the Kakfka traffic to stdout.
+Conduktor Gateway comes with an included interceptor which writes log lines and information about the Kafka traffic to stdout.
 
 If this is your first time starting Gateway, the [Quick Start Guide](https://docs.conduktor.io/platform/gateway/installation/opensource-install/) describes how to get setup and try the logging interceptor. Go here first!
 
@@ -52,6 +52,11 @@ conduktor-gateway
 │   │
 │   └── src/test/resources - docker setup for integration tests 
 ```
+
+# Interceptor
+
+It will add some extra logic for Kafka request or response.
+
 
 # Building
 
