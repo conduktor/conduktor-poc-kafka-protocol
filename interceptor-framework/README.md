@@ -164,7 +164,7 @@ You should intercept `AbstractRequestResponse` if the interceptor needs to work 
 ### Intercept but want to break the flow
 
 For some reasons, we might want to fast return the response to client without send the request to Kafka server.
-Interceptor can throw a **InterceptorIntentionException**. See [Error handling](###error-handling) for more detail.
+Interceptor can throw a **InterceptorIntentionException**. See [Error handling](#error-handling) for more detail.
 
 ### CompletionStage
 
