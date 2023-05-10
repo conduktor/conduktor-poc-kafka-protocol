@@ -35,7 +35,6 @@ hs_err_pid*
 
 logs
 target
-bin
 .settings
 .classpath
 .project
@@ -162,7 +161,6 @@ fabric.properties
 MANIFEST.MF
 _site/
 activemq-data
-bin
 build
 build.log
 dependency-reduced-pom.xml
