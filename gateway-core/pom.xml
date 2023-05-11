@@ -303,7 +303,7 @@
                 <executions>
                     <execution>
                         <id>dockerBuild</id>
-                        <phase>deploy</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>dockerBuild</goal>
                         </goals>
