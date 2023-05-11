@@ -38,6 +38,10 @@ setup_colors() {
 
 setup_colors
 
+if [ ! -d "${INTERCEPTORS}" ] ; then
+    mkdir ${INTERCEPTORS}
+fi
+
 if [[ -z "$(ls ${INTERCEPTORS})" ]]; then
   echo -e "${YELLOW}Warning : No interceptors provided for gateway. To add interceptor push interceptor jars in ${INTERCEPTORS} folder and configure them.${NOFORMAT}"
 fi
