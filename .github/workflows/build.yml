@@ -32,3 +32,7 @@ jobs:
         run: mvn -B package deploy --file pom.xml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run integration tests
+        run : mvn verify
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

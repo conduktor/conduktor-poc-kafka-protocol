@@ -17,6 +17,7 @@ package io.conduktor.gateway.integration.metrics;
 
 import io.conduktor.gateway.integration.BaseGatewayIntegrationTest;
 import io.micrometer.core.instrument.binder.jvm.JvmThreadMetrics;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.TimeUnit;
@@ -25,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class JvmThreadMetricsTest extends BaseGatewayIntegrationTest {
     @Test
+    @Tag("IntegrationTest")
     void threadMetrics() {
         var registry = getMetricsRegistryProvider().registry();
         new JvmThreadMetrics().bindTo(registry);

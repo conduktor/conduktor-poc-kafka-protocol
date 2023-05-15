@@ -22,6 +22,7 @@ import io.conduktor.gateway.integration.util.ClientFactory;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.TopicPartition;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -44,6 +45,7 @@ public class GatewayMultipleBootstrapServersTest extends BaseGatewayIntegrationT
     }
 
     @Test
+    @Tag("IntegrationTest")
     public void testMultipleBootstrapServers() throws ExecutionException, InterruptedException {
         var clientTopic = createTopic(clientFactory.kafkaAdmin(), 1, (short) 1);
         AwaitAssertUtils.awaitUntilAsserted(20, () -> {

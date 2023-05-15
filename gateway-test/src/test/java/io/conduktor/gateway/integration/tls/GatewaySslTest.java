@@ -23,6 +23,7 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.TopicPartition;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -59,6 +60,7 @@ public class GatewaySslTest extends BaseGatewayIntegrationTest {
     }
 
     @Test
+    @Tag("IntegrationTest")
     public void testConnectionOnSSlOnlyGateway() throws ExecutionException, InterruptedException {
         var client = clientFactory.gatewayAdmin();
         var topic = createTopic(client, 1, (short) 1);

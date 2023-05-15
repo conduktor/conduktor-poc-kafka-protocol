@@ -18,6 +18,7 @@ package io.conduktor.gateway.integration.metrics;
 import io.conduktor.gateway.integration.BaseGatewayIntegrationTest;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,6 +33,7 @@ public class ProcessorMetricsTest extends BaseGatewayIntegrationTest {
     }
 
     @Test
+    @Tag("IntegrationTest")
     void cpuMetrics() {
         assertThat(registry.get("system.cpu.count").gauge().value()).isPositive();
         if (System.getProperty("os.name").toLowerCase().contains("win")) {
@@ -42,6 +44,7 @@ public class ProcessorMetricsTest extends BaseGatewayIntegrationTest {
     }
 
     @Test
+    @Tag("IntegrationTest")
     void hotspotCpuMetrics() {
 
         assertThat(registry.get("system.cpu.usage").gauge().value()).isNotNegative();

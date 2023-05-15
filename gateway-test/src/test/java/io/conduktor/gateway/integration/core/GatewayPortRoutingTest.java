@@ -19,6 +19,7 @@ import io.conduktor.gateway.config.GatewayConfiguration;
 import io.conduktor.gateway.integration.BaseGatewayIntegrationTest;
 import io.conduktor.gateway.integration.util.ProduceConsumeUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.ExecutionException;
@@ -28,6 +29,7 @@ public class GatewayPortRoutingTest extends BaseGatewayIntegrationTest {
     public static final int MAX_KEY = 10;
 
     @Test
+    @Tag("IntegrationTest")
     public void testProduceAndConsume() throws ExecutionException, InterruptedException {
         var clientTopic = createTopic(clientFactory.kafkaAdmin(), 1, (short) 1);
         ProduceConsumeUtils.produceAndVerify(clientFactory.gatewayProducer(), clientTopic, MAX_KEY);
