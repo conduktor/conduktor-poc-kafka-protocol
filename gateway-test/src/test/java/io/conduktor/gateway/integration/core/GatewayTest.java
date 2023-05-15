@@ -21,6 +21,7 @@ import org.apache.kafka.clients.admin.AlterConfigOp;
 import org.apache.kafka.clients.admin.Config;
 import org.apache.kafka.clients.admin.ConfigEntry;
 import org.apache.kafka.common.config.ConfigResource;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
@@ -36,6 +37,7 @@ public class GatewayTest extends BaseGatewayIntegrationTest {
 
 
     @Test
+    @Tag("IntegrationTest")
     public void testCanProduceThroughGateway() throws ExecutionException, InterruptedException {
 
         var clientTopic = createTopic(clientFactory.kafkaAdmin(), 1, (short) 1);
@@ -46,6 +48,7 @@ public class GatewayTest extends BaseGatewayIntegrationTest {
     }
 
     @Test
+    @Tag("IntegrationTest")
     public void testDescribeNonTopicConfigsNoOp() throws ExecutionException, InterruptedException {
         // this is internal playground functionality and so not subject to early version support
         // this should be disabled for early brokers
@@ -62,6 +65,7 @@ public class GatewayTest extends BaseGatewayIntegrationTest {
     }
 
     @Test
+    @Tag("IntegrationTest")
     public void testAlterNonTopicConfigsNoOp() throws ExecutionException, InterruptedException {
         // this is internal playground functionality and so not subject to early version support
         // this should be disabled for early brokers
@@ -84,6 +88,7 @@ public class GatewayTest extends BaseGatewayIntegrationTest {
     }
 
     @Test
+    @Tag("IntegrationTest")
     public void testAlterNonTopicConfigsIncrementalNoOp() throws ExecutionException, InterruptedException {
         // this is internal playground functionality and so not subject to early version support
         // this should be disabled for early brokers

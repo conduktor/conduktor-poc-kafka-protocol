@@ -130,7 +130,28 @@
                         <version>5.9.2</version>
                     </dependency>
                 </dependencies>
+                <configuration>
+                    <excludedGroups>IntegrationTest</excludedGroups>
+                </configuration>
             </plugin>
+            <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <version>3.1.0</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Test</include>
+                    </includes>
+                </configuration>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>integration-test</goal>
+                        <goal>verify</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>

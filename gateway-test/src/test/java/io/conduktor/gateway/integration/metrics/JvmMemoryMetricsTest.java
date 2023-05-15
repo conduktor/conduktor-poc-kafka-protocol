@@ -18,6 +18,7 @@ package io.conduktor.gateway.integration.metrics;
 import io.conduktor.gateway.integration.BaseGatewayIntegrationTest;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.binder.BaseUnits;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class JvmMemoryMetricsTest extends BaseGatewayIntegrationTest {
 
     @Test
+    @Tag("IntegrationTest")
     void memoryMetrics() {
         var registry = getMetricsRegistryProvider().registry();
 

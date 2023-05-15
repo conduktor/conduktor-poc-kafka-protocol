@@ -36,6 +36,7 @@ import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.layout.PatternLayout;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -82,6 +83,7 @@ public class LoggerInterceptorPluginIntegrationTest extends BaseGatewayIntegrati
     }
 
     @Test
+    @Tag("IntegrationTest")
     public void testLoadsInterceptors() {
         assertThat(getInterceptorPoolService().getAllInterceptors(FetchRequest.class).size())
                 .isEqualTo(2);
@@ -92,6 +94,7 @@ public class LoggerInterceptorPluginIntegrationTest extends BaseGatewayIntegrati
     }
 
     @Test
+    @Tag("IntegrationTest")
     public void testInterceptsProduceMessages() throws ExecutionException, InterruptedException {
 
         var clientTopic = createTopic(clientFactory.kafkaAdmin(), 1, (short) 1);
@@ -114,6 +117,7 @@ public class LoggerInterceptorPluginIntegrationTest extends BaseGatewayIntegrati
     }
 
     @Test
+    @Tag("IntegrationTest")
     public void testInterceptsFetchMessages() throws ExecutionException, InterruptedException {
 
         var clientTopic = createTopic(clientFactory.kafkaAdmin(), 1, (short) 1);

@@ -22,6 +22,7 @@ import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.config.ConfigResource;
 import org.apache.kafka.common.errors.UnknownServerException;
 import org.apache.kafka.common.protocol.ApiKeys;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
@@ -36,6 +37,7 @@ public class GatewayAdminErrorHandlerTest extends BaseErrorHandlerTest {
 
     @ParameterizedTest
     @EnumSource(ExceptionMockType.class)
+    @Tag("IntegrationTest")
     public void testCreateTopics(ExceptionMockType type) throws ExecutionException, InterruptedException {
         mockException(type, ApiKeys.CREATE_TOPICS);
         createTopic(clientFactory.kafkaAdmin(), 1, (short) 1);
@@ -49,6 +51,7 @@ public class GatewayAdminErrorHandlerTest extends BaseErrorHandlerTest {
 
     @ParameterizedTest
     @EnumSource(ExceptionMockType.class)
+    @Tag("IntegrationTest")
     public void testAlterConfigs(ExceptionMockType type) throws ExecutionException, InterruptedException {
         mockException(type, ApiKeys.ALTER_CONFIGS);
         var gatewayTopic = generateClientTopic();
@@ -65,6 +68,7 @@ public class GatewayAdminErrorHandlerTest extends BaseErrorHandlerTest {
 
     @ParameterizedTest
     @EnumSource(ExceptionMockType.class)
+    @Tag("IntegrationTest")
     public void testIncrementalAlterConfigs(ExceptionMockType type) throws ExecutionException, InterruptedException {
         mockException(type, ApiKeys.INCREMENTAL_ALTER_CONFIGS);
         var gatewayTopic = generateClientTopic();
@@ -81,6 +85,7 @@ public class GatewayAdminErrorHandlerTest extends BaseErrorHandlerTest {
 
     @ParameterizedTest
     @EnumSource(ExceptionMockType.class)
+    @Tag("IntegrationTest")
     public void testDeleteTopics(ExceptionMockType type) throws ExecutionException, InterruptedException {
         mockException(type, ApiKeys.DELETE_TOPICS);
         var gatewayTopic = generateClientTopic();
@@ -93,6 +98,7 @@ public class GatewayAdminErrorHandlerTest extends BaseErrorHandlerTest {
 
     @ParameterizedTest
     @EnumSource(ExceptionMockType.class)
+    @Tag("IntegrationTest")
     public void testDescribeConfigs(ExceptionMockType type) throws ExecutionException, InterruptedException {
         mockException(type, ApiKeys.DESCRIBE_CONFIGS);
         var gatewayTopic = generateClientTopic();

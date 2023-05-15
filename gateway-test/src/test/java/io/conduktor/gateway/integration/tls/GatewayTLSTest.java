@@ -21,6 +21,7 @@ import io.conduktor.gateway.integration.BaseGatewayIntegrationTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
 
@@ -42,6 +43,7 @@ public class GatewayTLSTest extends BaseGatewayIntegrationTest {
 
 
     @Test
+    @Tag("IntegrationTest")
     void testReloadCertificates() throws Exception {
         //keystore:   test/config/old/kafka-gateway.keystore.jks
         //truststore: test/config/old/kafka-gateway.truststore.jks

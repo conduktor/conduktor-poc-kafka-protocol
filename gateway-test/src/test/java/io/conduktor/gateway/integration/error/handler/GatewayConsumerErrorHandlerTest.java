@@ -20,6 +20,7 @@ import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.errors.TimeoutException;
 import org.apache.kafka.common.errors.UnknownServerException;
 import org.apache.kafka.common.protocol.ApiKeys;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -53,6 +54,7 @@ public class GatewayConsumerErrorHandlerTest extends BaseErrorHandlerTest {
      */
     @ParameterizedTest
     @MethodSource("consumerTestArguments")
+    @Tag("IntegrationTest")
     public void testConsume(ApiKeys apiKeys, ExceptionMockType type, Class<?> expectedException) throws Exception {
         var gatewayTopic = generateClientTopic();
         try (var gatewayProducer = clientFactory.gatewayProducer()) {

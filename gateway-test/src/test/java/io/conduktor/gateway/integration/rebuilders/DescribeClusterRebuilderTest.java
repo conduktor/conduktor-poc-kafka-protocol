@@ -18,6 +18,7 @@ package io.conduktor.gateway.integration.rebuilders;
 import io.conduktor.gateway.integration.BaseGatewayIntegrationTest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.Node;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Comparator;
@@ -30,6 +31,7 @@ public class DescribeClusterRebuilderTest extends BaseGatewayIntegrationTest {
 
 
     @Test
+    @Tag("IntegrationTest")
     public void testShouldReturnGatewayHostNames() throws ExecutionException, InterruptedException {
         try (var admin = clientFactory.gatewayAdmin()) {
             var brokers = admin.describeCluster().nodes().get();

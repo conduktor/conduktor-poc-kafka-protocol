@@ -16,6 +16,7 @@
 package io.conduktor.gateway.integration.metrics;
 
 import io.conduktor.gateway.integration.BaseGatewayIntegrationTest;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
@@ -27,6 +28,7 @@ import static org.awaitility.Awaitility.await;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class JvmGcMetricsTest extends BaseGatewayIntegrationTest {
     @Test
+    @Tag("IntegrationTest")
     void gcMetricsAvailableAfterGc() {
         var registry = getMetricsRegistryProvider().registry();
         System.gc();

@@ -16,12 +16,15 @@
 package io.conduktor.gateway.integration.concurrency;
 
 import io.conduktor.gateway.integration.BaseGatewayIntegrationTest;
+import io.conduktor.gateway.integration.DockerComposeIntegrationTest;
 import io.conduktor.gateway.integration.util.ClientFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.TopicPartition;
+import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -41,6 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class GatewayConcurrencyTest extends BaseGatewayIntegrationTest {
 
     @Test
+    @Tag("IntegrationTest")
     public void multiAdmin() throws Exception {
         var pairOfClientTopic = generateTopics();
         var clientTopic1 = pairOfClientTopic.getLeft();
@@ -75,6 +79,7 @@ public class GatewayConcurrencyTest extends BaseGatewayIntegrationTest {
     }
 
     @Test
+    @Tag("IntegrationTest")
     public void multiProducers() throws Exception {
         var pairOfClientTopic = generateTopics();
         var clientTopic1 = pairOfClientTopic.getLeft();
@@ -107,6 +112,7 @@ public class GatewayConcurrencyTest extends BaseGatewayIntegrationTest {
     }
 
     @Test
+    @Tag("IntegrationTest")
     public void testMultipleProducerAndSameGatewayTopic() throws ExecutionException, InterruptedException, TimeoutException {
         var executorService = Executors.newFixedThreadPool(2);
         var clientTopic = generateTopics().getLeft();
@@ -119,6 +125,7 @@ public class GatewayConcurrencyTest extends BaseGatewayIntegrationTest {
     }
 
     @Test
+    @Tag("IntegrationTest")
     public void testMultipleProducerAndMultipleGatewayTopic() throws ExecutionException, InterruptedException, TimeoutException {
         var executorService = Executors.newFixedThreadPool(2);
         var pairOfClientTopic = generateTopics();
@@ -133,6 +140,7 @@ public class GatewayConcurrencyTest extends BaseGatewayIntegrationTest {
     }
 
     @Test
+    @Tag("IntegrationTest")
     public void testMultipleConsumerAndSameGatewayTopic() throws ExecutionException, InterruptedException, TimeoutException {
         var pairOfClientTopic = generateTopics();
         var clientTopic1 = pairOfClientTopic.getLeft();
@@ -151,6 +159,7 @@ public class GatewayConcurrencyTest extends BaseGatewayIntegrationTest {
     }
 
     @Test
+    @Tag("IntegrationTest")
     public void testMultipleConsumerAndMultipleGatewayTopic() throws ExecutionException, InterruptedException, TimeoutException {
         var pairOfClientTopic = generateTopics();
         var clientTopic1 = pairOfClientTopic.getLeft();
@@ -175,6 +184,7 @@ public class GatewayConcurrencyTest extends BaseGatewayIntegrationTest {
     }
 
     @Test
+    @Tag("IntegrationTest")
     public void testFetchMultiBatchShouldReturnControlBatches() throws ExecutionException, InterruptedException {
         //create client topic 1 +  client topic 2
         var pairOfClientTopic = generateTopics();
@@ -200,6 +210,7 @@ public class GatewayConcurrencyTest extends BaseGatewayIntegrationTest {
     }
 
     @Test
+    @Tag("IntegrationTest")
     public void testMultipleProducerAndConsumerWithSameGatewayTopic() throws ExecutionException, InterruptedException, TimeoutException {
         var pairOfClientTopic = generateTopics();
         var clientTopic1 = pairOfClientTopic.getLeft();
@@ -224,6 +235,7 @@ public class GatewayConcurrencyTest extends BaseGatewayIntegrationTest {
     }
 
     @Test
+    @Tag("IntegrationTest")
     public void testMultipleProducerAndConsumerWithMultipleGatewayTopic() throws ExecutionException, InterruptedException, TimeoutException {
         var pairOfClientTopic = generateTopics();
         var clientTopic1 = pairOfClientTopic.getLeft();

@@ -16,6 +16,7 @@
 package io.conduktor.gateway.integration.metrics;
 
 import io.conduktor.gateway.integration.BaseGatewayIntegrationTest;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ClassLoaderMetricsTest extends BaseGatewayIntegrationTest {
 
     @Test
+    @Tag("IntegrationTest")
     void classLoadingMetrics() {
         assertThat(getMetricsRegistryProvider().registry()
                 .get("jvm.classes.loaded").gauge().value()).isPositive();
