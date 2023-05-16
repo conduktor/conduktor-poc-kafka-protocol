@@ -57,7 +57,7 @@ public class GatewayExecutor implements AutoCloseable {
 
     @Override
     public void close() {
-        log.error("Start to close resources!!!");
+        log.info("Start to close resources.");
         try {
             if (upStreamResource != null) {
                 upStreamResource.shutdownGracefully();

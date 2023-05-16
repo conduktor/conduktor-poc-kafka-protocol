@@ -30,7 +30,7 @@ java io.conduktor.gateway.Bootstrap
 
 # Error handling:
 retVal=$?
-if [ $retVal -ne 0 ]; then
+if [ $retVal -ne 0 ] && [ $retVal -ne 130 ] ; then
     echo "Gateway failed to start.  Ensure your CLASSPATH includes gateway-core-0.5.0-SNAPSHOT.jar and any interceptors defined under the pluginClass in your application.yaml" ${CLASSPATH}
 fi
 exit $retVal
