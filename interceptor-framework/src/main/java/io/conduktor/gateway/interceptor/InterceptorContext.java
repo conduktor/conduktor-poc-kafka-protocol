@@ -20,9 +20,10 @@ import org.apache.kafka.common.requests.RequestHeader;
 import java.net.InetSocketAddress;
 import java.util.Map;
 
-public record InterceptorContext (
+public record InterceptorContext(
         DirectionType direction,
         RequestHeader requestHeader,
-        Map<String,Object> inFlightInfo,
-        InetSocketAddress clientAddress){
+        Map<String, Object> inFlightInfo,
+        InetSocketAddress clientAddress,
+        UserInterceptor user) {
 }

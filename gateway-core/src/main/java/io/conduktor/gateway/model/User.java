@@ -25,6 +25,9 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public class User {
+
+    public static final User ANONYMOUS = new User("anonymous");
+
     private String username;
 
 }

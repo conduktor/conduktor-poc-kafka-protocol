@@ -17,6 +17,7 @@ package io.conduktor.gateway.service;
 
 import com.google.common.annotations.VisibleForTesting;
 import io.conduktor.gateway.common.KafkaRequestUtils;
+import io.conduktor.gateway.model.User;
 import io.conduktor.gateway.network.GatewayChannel;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.socket.SocketChannel;
@@ -184,5 +185,9 @@ public class ClientRequest {
 
     public boolean isRecordingMetrics() {
         return this.recordingMetrics;
+    }
+
+    public User getUser() {
+        return gatewayChannel.getUser();
     }
 }

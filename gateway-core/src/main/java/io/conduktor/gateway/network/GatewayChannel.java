@@ -16,6 +16,7 @@
 package io.conduktor.gateway.network;
 
 import io.conduktor.gateway.authorization.SecurityHandler;
+import io.conduktor.gateway.model.User;
 import io.conduktor.gateway.service.ClientRequest;
 import io.conduktor.gateway.thread.GatewayThread;
 import io.netty.buffer.ByteBuf;
@@ -258,6 +259,11 @@ public class GatewayChannel extends ChannelInboundHandlerAdapter implements Auto
 
     public SocketChannel getGatewaySocketChannel() {
         return gatewaySocketChannel;
+    }
+
+    public User getUser() {
+        return authenticator.getUser()
+                .orElse(User.ANONYMOUS);
     }
 
 
