@@ -5,6 +5,7 @@ import io.conduktor.gateway.interceptor.Interceptor;
 import io.conduktor.gateway.interceptor.InterceptorContext;
 import io.conduktor.gateway.interceptor.InterceptorValue;
 import io.conduktor.gateway.model.InterceptContext;
+import io.conduktor.gateway.model.User;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import org.apache.kafka.common.message.FetchResponseData;
 import org.apache.kafka.common.requests.FetchResponse;
@@ -39,7 +40,11 @@ public class InterceptorOrchestrationTest {
         when(interceptContext.getDirectionType())
                 .thenReturn(DirectionType.RESPONSE);
 
+
         var clientRequest = Mockito.mock(ClientRequest.class);
+        when(clientRequest.getUser())
+                .thenReturn(User.ANONYMOUS);
+
         var socketChannel = Mockito.mock(NioSocketChannel.class);
         when(interceptContext.getClientRequest())
                 .thenReturn(clientRequest);
