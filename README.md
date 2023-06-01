@@ -12,6 +12,8 @@ type of message on consume.
 Conduktor Gateway makes it simple to quickly define interceptors that can be combined into pipelines that will be applied to
 client interactions.
 
+See what you can already do with Conduktor Gateway on the [interceptor marketplace](https://marketplace.conduktor.io/). You can also [write your own](https://docs.conduktor.io/platform/gateway/interceptors/write-an-interceptor/) interceptor.
+
 # How to start?
 
 Conduktor Gateway comes with an included interceptor which writes log lines and information about the Kakfka traffic to stdout.
