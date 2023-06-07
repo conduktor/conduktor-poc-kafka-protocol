@@ -24,6 +24,7 @@ import com.typesafe.config.ConfigFactory;
 import com.typesafe.config.ConfigObject;
 import io.conduktor.gateway.config.GatewayConfiguration;
 import io.conduktor.gateway.config.YamlConfigReader;
+import io.conduktor.gateway.exception.GatewayStartFailException;
 import jakarta.validation.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -120,7 +121,11 @@ public class Bootstrap {
             app = injector.getInstance(GatewayExecutor.class);
             app.start();
         } catch (Exception ex) {
-            log.error("Error happen when start app", ex);
+            if (ex instanceof GatewayStartFailException startFailException) {
+                log.error(startFailException.getReason() + ". Gateway can not start!!!");
+            } else {
+                log.error("Error happen when start app", ex);
+            }
             if (app != null) {
                 try {
                     app.close();

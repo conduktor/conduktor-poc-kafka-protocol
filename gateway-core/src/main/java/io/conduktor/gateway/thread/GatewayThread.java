@@ -31,6 +31,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.SingleThreadEventLoop;
+import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.RejectedExecutionHandler;
 import io.netty.util.internal.PlatformDependent;
 import lombok.extern.slf4j.Slf4j;
@@ -72,6 +73,12 @@ public class GatewayThread extends SingleThreadEventLoop {
     private final MetricsRegistryProvider metricsRegistryProvider;
     private final Time time = Time.SYSTEM;
     private final Counter receivedRequestCounter;
+
+
+    private volatile long gracefulShutdownQuietPeriodCustom;
+
+    private volatile long startShutDownGraceFullyAt;
+    private volatile long gracefulShutdownTimeoutCustom;
 
 
     public GatewayThread(
@@ -190,7 +197,15 @@ public class GatewayThread extends SingleThreadEventLoop {
         for (; ; ) { // not a busy spin as we are polling and selector will wait on IO or wake up (new task or timeout)
             try {
                 runAllTasks(Long.MAX_VALUE);
-                upstreamIOOrchestration.poll(Long.MAX_VALUE);
+                if (isShuttingDown()) {
+                    //should not wait longer than time left for shutting down the gateway thread
+                    var timeFromShutDown = System.currentTimeMillis() - startShutDownGraceFullyAt;
+                    var timeLeftForWaitingForShutdown = gracefulShutdownQuietPeriodCustom - timeFromShutDown;
+                    upstreamIOOrchestration.poll(timeLeftForWaitingForShutdown);
+                } else {
+                    upstreamIOOrchestration.poll(Long.MAX_VALUE);
+                }
+
                 handleDisconnections();
                 handleReceivers();
             } catch (IOException e) {
@@ -215,6 +230,15 @@ public class GatewayThread extends SingleThreadEventLoop {
                 }
             }
         }
+    }
+
+
+    @Override
+    public Future<?> shutdownGracefully(long quietPeriod, long timeout, TimeUnit unit) {
+        gracefulShutdownQuietPeriodCustom = unit.toMillis(quietPeriod);
+        startShutDownGraceFullyAt = System.currentTimeMillis();
+        gracefulShutdownTimeoutCustom = unit.toMillis(timeout);
+        return super.shutdownGracefully(quietPeriod, timeout, unit);
     }
 
     @Override
@@ -262,7 +286,7 @@ public class GatewayThread extends SingleThreadEventLoop {
                     .exceptionally(ex -> {
                         inFlightRequestService.getAndRemoveRequest(clientRequest.getClientCorrelationId());
                         var cause = ex.getCause();
-                        logErrorIfRequired(String.format("An error occurred when sending request to Kafka cluster: {}", requestHeader),
+                        logErrorIfRequired(String.format("An error occurred when sending request to Kafka cluster: %s", requestHeader),
                                 ex);
                         if (errorHandler.handleGatewayException(clientRequest, cause)) {
                             return null;
@@ -271,7 +295,7 @@ public class GatewayThread extends SingleThreadEventLoop {
                         return null;
                     });
         } catch (Exception exception) {
-            logErrorIfRequired(String.format("Caught Exception when error happened when sending request to kafka cluster at: {}", requestHeader),
+            logErrorIfRequired(String.format("Caught Exception when error happened when sending request to kafka cluster at: %s", requestHeader),
                     exception);
             errorHandler.handleRequestError(clientRequest, kafkaPayload.duplicate());
         } finally {
