@@ -73,7 +73,7 @@ public class GatewayExecutor implements AutoCloseable {
                 brokerManager.close();
             }
         } catch (Exception e) {
-            log.error("Error happen when shutting down gateway", e);
+            log.error("An error occured when shutting down Gateway", e);
             throw new RuntimeException(e);
         }
 
