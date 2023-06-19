@@ -101,7 +101,7 @@ public class GatewayBrokers {
             if (exception instanceof BindException) {
                 throw new GatewayStartFailException("port " + port + " is in used!!!");
             }
-            log.error("Unknown error when init new port of Gateway: [port={}]", port, exception);
+            log.error("An unknown error occurred when initialising a new port for Gateway: [port={}]", port, exception);
             throw new RuntimeException(exception);
         }
     }
