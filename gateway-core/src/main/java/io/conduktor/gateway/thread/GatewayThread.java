@@ -295,7 +295,7 @@ public class GatewayThread extends SingleThreadEventLoop {
                         return null;
                     });
         } catch (Exception exception) {
-            logErrorIfRequired(String.format("Caught Exception when error happened when sending request to kafka cluster at: %s", requestHeader),
+            logErrorIfRequired(String.format("An exception was thrown when during request send to Kafka cluster at: %s", requestHeader),
                     exception);
             errorHandler.handleRequestError(clientRequest, kafkaPayload.duplicate());
         } finally {
