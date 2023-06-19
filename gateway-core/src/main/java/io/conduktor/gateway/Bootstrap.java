@@ -124,7 +124,7 @@ public class Bootstrap {
             if (ex instanceof GatewayStartFailException startFailException) {
                 log.error(startFailException.getReason() + ". Gateway can not start!!!");
             } else {
-                log.error("Error happen when start app", ex);
+                log.error("An error occurred when starting Gateway", ex);
             }
             if (app != null) {
                 try {
