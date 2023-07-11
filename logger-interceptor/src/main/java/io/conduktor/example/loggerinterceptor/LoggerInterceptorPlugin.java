@@ -16,6 +16,7 @@
 package io.conduktor.example.loggerinterceptor;
 
 
+import com.google.common.collect.Lists;
 import io.conduktor.gateway.interceptor.Interceptor;
 import io.conduktor.gateway.interceptor.InterceptorConfigurationException;
 import io.conduktor.gateway.interceptor.InterceptorProvider;
@@ -45,4 +46,8 @@ public class LoggerInterceptorPlugin implements Plugin {
         );
     }
 
+    @Override
+    public List<String> tags() {
+        return List.of("data");
+    }
 }

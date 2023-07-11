@@ -17,7 +17,15 @@ package io.conduktor.gateway.interceptor;
 
 import org.apache.kafka.common.requests.AbstractRequestResponse;
 
-import java.util.*;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public interface Plugin {
 
@@ -35,5 +43,31 @@ public interface Plugin {
                     result.get(interceptor.type()).add(interceptor.interceptor());
                 });
         return result;
+    }
+
+    default String readme() {
+        try {
+            return resourceAsString("/META-INF/services/README.md");
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    private String resourceAsString(String name) throws IOException, URISyntaxException {
+        return Files.readString(
+                Paths.get(getClass().getResource(name).toURI()),
+                Charset.forName("utf-8"));
+    }
+
+    default List<String> examples() {
+        try {
+            return List.of(resourceAsString("/META-INF/services/example.json"));
+        } catch (Exception e) {
+            return List.of();
+        }
+    }
+
+    default List<String> tags() {
+        return List.of();
     }
 }
