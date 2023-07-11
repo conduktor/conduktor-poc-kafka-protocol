@@ -19,7 +19,7 @@ import org.apache.kafka.common.requests.AbstractRequestResponse;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public interface Plugin {
     private String resourceAsString(String name) throws IOException, URISyntaxException {
         return Files.readString(
                 Paths.get(getClass().getResource(name).toURI()),
-                Charset.forName("utf-8"));
+                StandardCharsets.UTF_8);
     }
 
     default List<String> examples() {
@@ -67,7 +67,7 @@ public interface Plugin {
         }
     }
 
-    default List<String> tags() {
-        return List.of();
+    default Map<String, String> tags() {
+        return new MarkdownHeadersUtil().extractHeaders(readme());
     }
 }

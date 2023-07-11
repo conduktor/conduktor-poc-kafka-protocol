@@ -45,9 +45,4 @@ public class LoggerInterceptorPlugin implements Plugin {
                 new InterceptorProvider<>(AbstractResponse.class, new ResponseLoggerInterceptor())
         );
     }
-
-    @Override
-    public List<String> tags() {
-        return List.of("data");
-    }
 }
