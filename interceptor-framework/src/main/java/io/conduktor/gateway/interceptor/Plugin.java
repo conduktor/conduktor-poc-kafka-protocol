@@ -15,17 +15,17 @@
 
 package io.conduktor.gateway.interceptor;
 
+import com.google.common.io.Resources;
 import org.apache.kafka.common.requests.AbstractRequestResponse;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public interface Plugin {
 
@@ -53,10 +53,13 @@ public interface Plugin {
         }
     }
 
-    private String resourceAsString(String name) throws IOException, URISyntaxException {
-        return Files.readString(
-                Paths.get(getClass().getResource(name).toURI()),
-                StandardCharsets.UTF_8);
+    private String resourceAsString(String name) throws URISyntaxException, IOException {
+        try {
+            return Resources.toString(getClass().getClassLoader().getResource(name).toURI().toURL(), UTF_8);
+        } catch (Exception e) {
+            // support flat classloader
+            return Resources.toString(getClass().getResource(name).toURI().toURL(), UTF_8);
+        }
     }
 
     default List<String> examples() {
