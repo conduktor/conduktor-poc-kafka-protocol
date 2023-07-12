@@ -61,19 +61,7 @@ public interface Plugin {
             return Resources.toString(getClass().getResource(name).toURI().toURL(), UTF_8);
         }
     }
-
-    default List<String> examples() {
-        try {
-            return List.of(resourceAsString("/META-INF/services/example.json"));
-        } catch (Exception e) {
-            try {
-                return List.of(resourceAsString("/META-INF/services/example.yaml"));
-            } catch (Exception ee) {
-                return List.of();
-            }
-        }
-    }
-
+    
     default Map<String, String> tags() {
         return new MarkdownHeadersUtil().extractHeaders(readme());
     }

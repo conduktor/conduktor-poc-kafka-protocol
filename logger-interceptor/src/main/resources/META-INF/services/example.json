@@ -1,7 +1,0 @@
-{
-  "pluginClass": "io.conduktor.example.loggerinterceptor.LoggerInterceptorPlugin",
-  "priority": 100,
-  "config": {
-    "loggingStyle": "obiWan"
-  }
-}

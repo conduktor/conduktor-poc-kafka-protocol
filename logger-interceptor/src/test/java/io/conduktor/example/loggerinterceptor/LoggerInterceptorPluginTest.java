@@ -23,13 +23,4 @@ public class LoggerInterceptorPluginTest {
                         "parent", "safeguard"
                 ));
     }
-
-    @Test
-    void hasExamples() {
-        assertThat(new LoggerInterceptorPlugin().examples())
-                .hasSize(1);
-        assertThat(new LoggerInterceptorPlugin().examples().get(0))
-                .contains("\"pluginClass\": \"io.conduktor.example.loggerinterceptor.LoggerInterceptorPlugin\"");
-
-    }
 }
