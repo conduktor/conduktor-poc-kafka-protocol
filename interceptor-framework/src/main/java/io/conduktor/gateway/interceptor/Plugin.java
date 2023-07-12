@@ -15,9 +15,17 @@
 
 package io.conduktor.gateway.interceptor;
 
+import com.google.common.io.Resources;
 import org.apache.kafka.common.requests.AbstractRequestResponse;
 
-import java.util.*;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public interface Plugin {
 
@@ -35,5 +43,26 @@ public interface Plugin {
                     result.get(interceptor.type()).add(interceptor.interceptor());
                 });
         return result;
+    }
+
+    default String readme() {
+        try {
+            return resourceAsString("/META-INF/services/README.md");
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    private String resourceAsString(String name) throws URISyntaxException, IOException {
+        try {
+            return Resources.toString(getClass().getClassLoader().getResource(name).toURI().toURL(), UTF_8);
+        } catch (Exception e) {
+            // support flat classloader
+            return Resources.toString(getClass().getResource(name).toURI().toURL(), UTF_8);
+        }
+    }
+    
+    default Map<String, String> tags() {
+        return new MarkdownHeadersUtil().extractHeaders(readme());
     }
 }
