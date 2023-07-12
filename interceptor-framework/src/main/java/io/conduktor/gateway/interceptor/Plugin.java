@@ -66,7 +66,11 @@ public interface Plugin {
         try {
             return List.of(resourceAsString("/META-INF/services/example.json"));
         } catch (Exception e) {
-            return List.of();
+            try {
+                return List.of(resourceAsString("/META-INF/services/example.yaml"));
+            } catch (Exception ee) {
+                return List.of();
+            }
         }
     }
 
