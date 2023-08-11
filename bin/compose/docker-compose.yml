@@ -1,7 +1,7 @@
 version: '3'
 services:
   gateway:
-    image: "docker.io/conduktor/conduktor-gateway:latest"
+    image: "docker.io/conduktor/conduktor-gateway-oss:latest"
     depends_on:
       - kafka
     ports:
