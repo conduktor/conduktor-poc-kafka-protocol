@@ -69,7 +69,7 @@ jobs:
           script: |
             await github.rest.actions.createWorkflowDispatch({
               owner: 'conduktor',
-              repo: 'conduktor-gateway',
+              repo: 'conduktor-gateway-oss',
               workflow_id: 'publish.yml',
               ref: 'main',
               inputs: {

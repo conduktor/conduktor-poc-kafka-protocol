@@ -290,7 +290,7 @@
                         <image>gcr.io/distroless/java17-debian11</image>
                     </from>
                     <to>
-                        <image>ghcr.io/conduktor/conduktor-gateway</image>
+                        <image>ghcr.io/conduktor/conduktor-gateway-oss</image>
                         <tags>
                             <tag>${project.version}</tag>
                             <tag>latest</tag>
