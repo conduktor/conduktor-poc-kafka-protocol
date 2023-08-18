@@ -1,0 +1,66 @@
+name: Publish to DockerHub
+
+on:
+  workflow_dispatch:
+    inputs:
+      input_tag:
+        description: 'ghcr tag'
+        required: true
+      output_tag:
+        description: 'docker hub tag'
+        required: true
+
+
+jobs:
+  publish-public-dockerhub:
+    name: Publish ${{ github.event.inputs.output_tag }} to DockerHub
+    runs-on: cdk-standard
+    timeout-minutes: 15
+    env:
+      PUBLISH_TAG: ''
+      IMAGE_NAME: conduktor/conduktor-gateway-oss
+    steps:
+      - name: Set GHCR_DISTROLESS_IMAGE env
+        run: echo "GHCR_DISTROLESS_IMAGE=ghcr.io/${{ env.IMAGE_NAME }}-distroless:${{ github.event.inputs.input_tag }}" >> $GITHUB_ENV
+
+      - name: Set DOCKERHUB_DISTROLESS_IMAGE env
+        run: echo "DOCKERHUB_DISTROLESS_IMAGE=docker.io/${{ env.IMAGE_NAME }}:${{ github.event.inputs.output_tag }}-distroless" >> $GITHUB_ENV
+
+      - name: Set DOCKERHUB_IMAGE_LATEST env
+        run: echo "DOCKERHUB_IMAGE_LATEST=docker.io/${{ env.IMAGE_NAME }}:latest" >> $GITHUB_ENV
+
+      - name: DEBUG env
+        run: |
+          echo "GHCR_DISTROLESS_IMAGE=${{ env.GHCR_DISTROLESS_IMAGE }}"
+          echo "DOCKERHUB_DISTROLESS_IMAGE=${{ env.DOCKERHUB_DISTROLESS_IMAGE }}"
+          echo "DOCKERHUB_IMAGE_LATEST=${{ env.DOCKERHUB_IMAGE_LATEST }}"
+
+      - name: Print jobs outputs
+        run: echo "Publish version ${{ github.event.inputs.output_tag }} to DockerHub registry"
+
+      - name: Login to ghcr.io
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Load images in daemon
+        shell: bash
+        run: |                 
+          docker image pull "${GHCR_DISTROLESS_IMAGE}"
+          
+          docker image ls -a
+
+      - name: Login to DockerHub registry
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.CONDUKTORBOT_DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.CONDUKTORBOT_DOCKER_HUB_PAT }}
+
+      - name: Push to DockerHub registry
+        shell: bash
+        run: |       
+          echo "Create tag ${DOCKERHUB_DISTROLESS_IMAGE} from ${GHCR_DISTROLESS_IMAGE}"
+          docker tag "${GHCR_DISTROLESS_IMAGE}" "${DOCKERHUB_DISTROLESS_IMAGE}"
+          docker push "${DOCKERHUB_DISTROLESS_IMAGE}"
