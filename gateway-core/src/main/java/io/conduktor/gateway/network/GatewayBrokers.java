@@ -18,6 +18,7 @@ package io.conduktor.gateway.network;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import io.conduktor.gateway.config.HostPortConfiguration;
+import io.conduktor.gateway.exception.GatewayStartFailException;
 import io.conduktor.gateway.metrics.MetricsRegistryKeys;
 import io.conduktor.gateway.metrics.MetricsRegistryProvider;
 import io.micrometer.core.instrument.Gauge;
@@ -32,6 +33,7 @@ import io.netty.handler.logging.LoggingHandler;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.List;
@@ -95,9 +97,12 @@ public class GatewayBrokers {
             gatewayBrokers.put(port, channel);
             gauge.measure();
             log.info("Gateway channel bound: {}", channel.localAddress());
-        } catch (Exception e) {
-            log.error("Error when init new port of Gateway: [port={}]", port, e);
-            throw new RuntimeException(e);
+        } catch (Exception exception) {
+            if (exception instanceof BindException) {
+                throw new GatewayStartFailException("port " + port + " is in used!!!");
+            }
+            log.error("An unknown error occurred when initialising a new port for Gateway: [port={}]", port, exception);
+            throw new RuntimeException(exception);
         }
     }
 

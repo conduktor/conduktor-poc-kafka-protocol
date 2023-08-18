@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>io.conduktor</groupId>
-        <artifactId>conduktor-gateway</artifactId>
-        <version>0.5.0-SNAPSHOT</version>
+        <artifactId>conduktor-gateway-oss</artifactId>
+        <version>0.6.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -14,8 +14,8 @@
         <openapi-generator-version>6.3.0</openapi-generator-version>
         <vertx.version>4.4.1</vertx.version>
         <micrometer.version>1.10.6</micrometer.version>
-        <netty.version>4.1.90.Final</netty.version>
-        <jackson.version>2.15.0</jackson.version>
+        <netty.version>4.1.94.Final</netty.version>
+        <jackson.version>2.15.2</jackson.version>
         <grafana.jpprof.version>0.1.6</grafana.jpprof.version>
         <apache.commons.lang3.version>3.12.0</apache.commons.lang3.version>
         <apache.commons.collection3.version>4.4</apache.commons.collection3.version>
@@ -25,7 +25,7 @@
         <assertj.version>3.24.2</assertj.version>
         <junit.jupiter.version>5.8.2</junit.jupiter.version>
         <caffeine.version>3.1.6</caffeine.version>
-        <common.io.version>2.11.0</common.io.version>
+        <common.io.version>2.13.0</common.io.version>
         <jakarta.validation.version>3.0.2</jakarta.validation.version>
         <hibernate.validator.version>8.0.0.Final</hibernate.validator.version>
         <glassfish.expressly.version>5.0.0</glassfish.expressly.version>
@@ -245,7 +245,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M7</version>
+                <version>3.1.2</version>
                 <dependencies>
                     <dependency>
                         <groupId>org.junit.jupiter</groupId>
@@ -284,13 +284,13 @@
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>3.3.2</version>
                 <configuration>
                     <from>
                         <image>gcr.io/distroless/java17-debian11</image>
                     </from>
                     <to>
-                        <image>ghcr.io/conduktor/conduktor-gateway</image>
+                        <image>ghcr.io/conduktor/conduktor-gateway-oss</image>
                         <tags>
                             <tag>${project.version}</tag>
                             <tag>latest</tag>

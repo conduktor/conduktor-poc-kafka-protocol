@@ -12,11 +12,13 @@ type of message on consume.
 Conduktor Gateway makes it simple to quickly define interceptors that can be combined into pipelines that will be applied to
 client interactions.
 
+See what you can already do with Conduktor Gateway on the [interceptor marketplace](https://marketplace.conduktor.io/). You can also [write your own](https://docs.conduktor.io/gateway/OSS/write-an-interceptor/) interceptor.
+
 # How to start?
 
-Conduktor Gateway comes with an included interceptor which writes log lines and information about the Kakfka traffic to stdout.
+Conduktor Gateway comes with an included interceptor which writes log lines and information about the Kafka traffic to stdout.
 
-If this is your first time starting Gateway, the [Quick Start Guide](https://docs.conduktor.io/platform/gateway/installation/opensource-install/) describes how to get setup and try the logging interceptor. Go here first!
+If this is your first time starting Gateway, the [Quick Start Guide](https://docs.conduktor.io/gateway/OSS/opensource-install/) describes how to get setup and try the logging interceptor. Go here first!
 
 # How to contribute to this project?
 
@@ -52,6 +54,11 @@ conduktor-gateway
 │   │
 │   └── src/test/resources - docker setup for integration tests 
 ```
+
+# Interceptor
+
+It will add some extra logic for Kafka request or response.
+
 
 # Building
 

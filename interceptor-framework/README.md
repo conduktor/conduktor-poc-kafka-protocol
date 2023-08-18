@@ -161,6 +161,11 @@ public class LoggerInterceptorPlugin implements Plugin {
 
 You should intercept `AbstractRequestResponse` if the interceptor needs to work on all requests and responses.  For example, you might want to write an audit record for all requests and responses passing through the gateway.
 
+### Intercept but want to break the flow
+
+For some reasons, we might want to fast return the response to client without send the request to Kafka server.
+Interceptor can throw a **InterceptorIntentionException**. See [Error handling](#error-handling) for more detail.
+
 ### CompletionStage
 
 The `intercept` method on the `Interceptor.java` interface returns a `CompletionStage` to the Gateway.  This holds the Kafka request or response that was passed in to the intercept method.  The request or response may have been updated if this interceptor is one that manipulates the Kafka data, or it may remain unchanged if the interceptor does not manipulate the data.
@@ -216,6 +221,19 @@ For example, a Kafka `FetchRequest` API request arriving with the Gateway will t
 
 The next interceptor in the prioritised list of applicable interceptors will not run until the previous interceptor’s `CompletionStage` has run and the associated `Future` has completed.
 
+### Error handling
+
+Conduktor Gateway catch exception from interceptor by two ways:
+
+* try catch as normal flow
+* using exceptionally callback of CompletionStage
+
+So, we can be sure that if an interceptor get exception while executing, only current request get affected.
+
+Beside of unexpected exception, we have **InterceptorIntentionException**. This is a special exception, which has a response inside. 
+When Conduktor Gateway encounters this type of exception, it will get the response inside and return that to client.
+
+
 ## `Plugin.java`
 
 `Plugin` defines one method:
@@ -248,7 +266,7 @@ The pom.xml in the loggerInterceptor package demonstrates one way to do this.
 
 Place the built interceptor jar file on the classpath of the gateway.
 
-Restart the gateway with the new jar file on the classpath.  In this example, the new interceptor is in a jar file that can be found in the conduktor-gateway repository under `myNewInterceptor/target/proxy-1.0-SNAPSHOT.jar`.
+Restart the gateway with the new jar file on the classpath.  In this example, the new interceptor is in a jar file that can be found in the conduktor-gateway repository under `myNewInterceptor/target/my-new-interceptor-1.0-SNAPSHOT.jar`.
 
 ```bash
 $ cp myNewInterceptor/target/my-new-interceptor-1.0-SNAPSHOT.jar bin/my-new-interceptor-1.0-SNAPSHOT.jar # Best practice is to store your interceptors in a central location

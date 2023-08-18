@@ -17,6 +17,7 @@ package io.conduktor.gateway;
 
 import com.google.inject.Inject;
 import io.conduktor.gateway.config.GatewayConfiguration;
+import io.conduktor.gateway.exception.GatewayStartFailException;
 import io.conduktor.gateway.metrics.MetricsRegistryProvider;
 import io.conduktor.gateway.network.BrokerManager;
 import io.conduktor.gateway.thread.UpStreamResource;
@@ -48,8 +49,11 @@ public class GatewayExecutor implements AutoCloseable {
         try {
             brokerManager.setUpstreamResourceAndStartBroker(upStreamResource);
             log.info("Gateway started successfully with port range: {}", gatewayConfiguration.getHostPortConfiguration().getPortRange());
+        } catch (GatewayStartFailException gatewayStartFailException) {
+            throw gatewayStartFailException;
         } catch (Exception ex) {
             log.error("Error when starting Gateway", ex);
+            throw new RuntimeException(ex);
         }
         Runtime.getRuntime().addShutdownHook(new Thread(this::close));
 
@@ -60,7 +64,7 @@ public class GatewayExecutor implements AutoCloseable {
         log.info("Start to close resources.");
         try {
             if (upStreamResource != null) {
-                upStreamResource.shutdownGracefully();
+                upStreamResource.shutdownGracefully().get();
             }
             if (metricsRegistryProvider != null) {
                 metricsRegistryProvider.close();
@@ -69,7 +73,7 @@ public class GatewayExecutor implements AutoCloseable {
                 brokerManager.close();
             }
         } catch (Exception e) {
-            log.error("Error happen when close metric registry provider");
+            log.error("An error occured when shutting down Gateway", e);
             throw new RuntimeException(e);
         }
 
