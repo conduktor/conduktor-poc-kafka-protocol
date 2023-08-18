@@ -21,7 +21,7 @@ jobs:
       IMAGE_NAME: conduktor/conduktor-gateway-oss
     steps:
       - name: Set GHCR_DISTROLESS_IMAGE env
-        run: echo "GHCR_DISTROLESS_IMAGE=ghcr.io/${{ env.IMAGE_NAME }}-distroless:${{ github.event.inputs.input_tag }}" >> $GITHUB_ENV
+        run: echo "GHCR_DISTROLESS_IMAGE=ghcr.io/${{ env.IMAGE_NAME }}:${{ github.event.inputs.input_tag }}" >> $GITHUB_ENV
 
       - name: Set DOCKERHUB_DISTROLESS_IMAGE env
         run: echo "DOCKERHUB_DISTROLESS_IMAGE=docker.io/${{ env.IMAGE_NAME }}:${{ github.event.inputs.output_tag }}" >> $GITHUB_ENV
