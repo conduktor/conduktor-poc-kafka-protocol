@@ -15,12 +15,11 @@
 
 package io.conduktor.gateway.service;
 
+import com.google.inject.Inject;
 import io.conduktor.gateway.metrics.MetricsRegistryProvider;
 import io.conduktor.gateway.network.BrokerManager;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-
-import javax.inject.Inject;
 
 @Getter
 @Accessors(fluent = true)

@@ -15,9 +15,9 @@
 
 package io.conduktor.gateway.network;
 
+import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import io.conduktor.gateway.config.HostPortConfiguration;
-import io.conduktor.gateway.config.SslConfig;
 import io.conduktor.gateway.metrics.MetricsRegistryKeys;
 import io.conduktor.gateway.metrics.MetricsRegistryProvider;
 import io.micrometer.core.instrument.Gauge;
@@ -32,7 +32,6 @@ import io.netty.handler.logging.LoggingHandler;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.inject.Inject;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.List;
