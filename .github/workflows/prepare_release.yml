@@ -28,6 +28,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+            token: ${{ secrets.CONDUKTORBOT_REPO_WRITE }}
 
       - name: Setup GPG
         id: gpg
