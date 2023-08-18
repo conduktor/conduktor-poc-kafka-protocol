@@ -15,11 +15,12 @@
 
 package io.conduktor.gateway.network;
 
+import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import io.conduktor.gateway.config.AuthenticationConfig;
 import io.conduktor.gateway.config.Endpoint;
-import io.conduktor.gateway.config.HostPortConfiguration;
 import io.conduktor.gateway.config.GatewayPortAndKafkaNodePair;
+import io.conduktor.gateway.config.HostPortConfiguration;
 import io.conduktor.gateway.config.support.Messages;
 import io.conduktor.gateway.metrics.MetricsRegistryProvider;
 import io.netty.channel.socket.SocketChannel;
@@ -28,7 +29,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.kafka.common.Node;
 
-import javax.inject.Inject;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;

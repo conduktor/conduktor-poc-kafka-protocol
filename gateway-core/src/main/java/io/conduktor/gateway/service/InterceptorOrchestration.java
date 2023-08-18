@@ -15,6 +15,7 @@
 
 package io.conduktor.gateway.service;
 
+import com.google.inject.Inject;
 import io.conduktor.gateway.interceptor.DirectionType;
 import io.conduktor.gateway.interceptor.InterceptorContext;
 import io.conduktor.gateway.interceptor.InterceptorValue;
@@ -22,7 +23,6 @@ import io.conduktor.gateway.model.InterceptContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.requests.AbstractRequestResponse;
 
-import javax.inject.Inject;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;

@@ -15,6 +15,7 @@
 
 package io.conduktor.gateway.network;
 
+import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import io.conduktor.gateway.config.HostPortConfiguration;
 import io.conduktor.gateway.exception.GatewayStartFailException;
@@ -32,7 +33,6 @@ import io.netty.handler.logging.LoggingHandler;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.inject.Inject;
 import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.util.HashMap;

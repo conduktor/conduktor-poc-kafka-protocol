@@ -15,9 +15,10 @@
 
 package io.conduktor.gateway.service;
 
+import com.google.inject.Inject;
+import io.conduktor.gateway.config.GatewayConfiguration;
 import io.conduktor.gateway.config.InterceptorConfigEntry;
 import io.conduktor.gateway.config.InterceptorPluginConfig;
-import io.conduktor.gateway.config.GatewayConfiguration;
 import io.conduktor.gateway.interceptor.Interceptor;
 import io.conduktor.gateway.interceptor.InterceptorConfigurationException;
 import io.conduktor.gateway.interceptor.InterceptorValue;
@@ -27,12 +28,10 @@ import org.apache.kafka.common.requests.AbstractRequest;
 import org.apache.kafka.common.requests.AbstractRequestResponse;
 import org.apache.kafka.common.requests.AbstractResponse;
 
-import javax.inject.Inject;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@SuppressWarnings("rawtypes")
 @Slf4j
 public class InterceptorPoolService {
 
