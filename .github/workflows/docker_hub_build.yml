@@ -14,7 +14,7 @@ on:
 jobs:
   publish-public-dockerhub:
     name: Publish ${{ github.event.inputs.output_tag }} to DockerHub
-    runs-on: cdk-standard
+    runs-on: [ ubuntu-latest ]
     timeout-minutes: 15
     env:
       PUBLISH_TAG: ''
@@ -24,7 +24,7 @@ jobs:
         run: echo "GHCR_DISTROLESS_IMAGE=ghcr.io/${{ env.IMAGE_NAME }}-distroless:${{ github.event.inputs.input_tag }}" >> $GITHUB_ENV
 
       - name: Set DOCKERHUB_DISTROLESS_IMAGE env
-        run: echo "DOCKERHUB_DISTROLESS_IMAGE=docker.io/${{ env.IMAGE_NAME }}:${{ github.event.inputs.output_tag }}-distroless" >> $GITHUB_ENV
+        run: echo "DOCKERHUB_DISTROLESS_IMAGE=docker.io/${{ env.IMAGE_NAME }}:${{ github.event.inputs.output_tag }}" >> $GITHUB_ENV
 
       - name: Set DOCKERHUB_IMAGE_LATEST env
         run: echo "DOCKERHUB_IMAGE_LATEST=docker.io/${{ env.IMAGE_NAME }}:latest" >> $GITHUB_ENV
