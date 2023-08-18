@@ -28,6 +28,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+            token: ${{ secrets.CONDUKTORBOT_REPO_WRITE }}
 
       - name: Setup GPG
         id: gpg
@@ -49,9 +51,6 @@ jobs:
       - name: Maven release prepare
         id: prepare
         run: |
-          gh version
-          gh auth login --with-token <<< ${GITHUB_TOKEN} || echo 0 # See https://github.com/cli/cli/issues/7008
-          gh auth status
           mvn --batch-mode release:prepare -DreleaseVersion=${{ inputs.version }} -DdevelopmentVersion=${{ inputs.next }} --file pom.xml
         env:
           GITHUB_TOKEN: ${{ secrets.CONDUKTORBOT_REPO_WRITE }}
