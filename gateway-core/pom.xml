@@ -29,7 +29,7 @@
         <jakarta.validation.version>3.0.2</jakarta.validation.version>
         <hibernate.validator.version>8.0.0.Final</hibernate.validator.version>
         <glassfish.expressly.version>5.0.0</glassfish.expressly.version>
-        <ru.vyarus.version>3.0.1</ru.vyarus.version>
+        <ru.vyarus.version>3.0.2</ru.vyarus.version>
         <reflections.version>0.10.2</reflections.version>
         <javax.xml.version>2.4.0-b180830.0359</javax.xml.version>
         <typesafe.config.version>1.4.2</typesafe.config.version>
