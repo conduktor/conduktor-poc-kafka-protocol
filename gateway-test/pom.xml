@@ -70,7 +70,7 @@
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-junit5</artifactId>
-            <version>4.4.1</version>
+            <version>4.4.5</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
