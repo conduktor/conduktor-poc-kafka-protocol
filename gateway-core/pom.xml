@@ -23,7 +23,7 @@
         <mockito.version>5.3.1</mockito.version>
         <awaitility.version>4.2.0</awaitility.version>
         <assertj.version>3.24.2</assertj.version>
-        <junit.jupiter.version>5.8.2</junit.jupiter.version>
+        <junit.jupiter.version>5.10.0</junit.jupiter.version>
         <caffeine.version>3.1.6</caffeine.version>
         <common.io.version>2.13.0</common.io.version>
         <jakarta.validation.version>3.0.2</jakarta.validation.version>
@@ -144,6 +144,12 @@
             <artifactId>vertx-junit5</artifactId>
             <version>${vertx.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.jupiter</groupId>
+                    <artifactId>junit-jupiter-engine</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
