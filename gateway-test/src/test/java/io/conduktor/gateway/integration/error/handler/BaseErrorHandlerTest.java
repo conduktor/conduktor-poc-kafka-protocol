@@ -31,8 +31,7 @@ import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutionException;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class BaseErrorHandlerTest extends BaseGatewayIntegrationTest {
 
@@ -46,7 +45,8 @@ public class BaseErrorHandlerTest extends BaseGatewayIntegrationTest {
 
     protected void mockException(ExceptionMockType type, ApiKeys apiKeys) {
         var rebuildMapper = getRebuildMapper();
-        var reBuilder = Mockito.spy(rebuildMapper.getReBuilder(apiKeys));
+        var reBuilder = mockingDetails(rebuildMapper.getReBuilder(apiKeys)).isMock() ?
+                rebuildMapper.getReBuilder(apiKeys) :  Mockito.spy(rebuildMapper.getReBuilder(apiKeys));
         when(rebuildMapper.getReBuilder(apiKeys))
                 .thenAnswer(invocationOnMock -> reBuilder);
         if (type.equals(ExceptionMockType.REQUEST)) {
