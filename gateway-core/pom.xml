@@ -25,7 +25,7 @@
         <assertj.version>3.24.2</assertj.version>
         <junit.jupiter.version>5.10.0</junit.jupiter.version>
         <caffeine.version>3.1.6</caffeine.version>
-        <common.io.version>2.13.0</common.io.version>
+        <common.io.version>2.14.0</common.io.version>
         <jakarta.validation.version>3.0.2</jakarta.validation.version>
         <hibernate.validator.version>8.0.0.Final</hibernate.validator.version>
         <glassfish.expressly.version>5.0.0</glassfish.expressly.version>
