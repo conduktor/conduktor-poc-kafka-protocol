@@ -27,7 +27,7 @@
         <caffeine.version>3.1.6</caffeine.version>
         <common.io.version>2.14.0</common.io.version>
         <jakarta.validation.version>3.0.2</jakarta.validation.version>
-        <hibernate.validator.version>8.0.0.Final</hibernate.validator.version>
+        <hibernate.validator.version>8.0.1.Final</hibernate.validator.version>
         <glassfish.expressly.version>5.0.0</glassfish.expressly.version>
         <ru.vyarus.version>3.0.2</ru.vyarus.version>
         <reflections.version>0.10.2</reflections.version>
