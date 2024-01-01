@@ -33,7 +33,7 @@ jobs:
 
       - name: Setup GPG
         id: gpg
-        uses: crazy-max/ghaction-import-gpg@v6.0.0
+        uses: crazy-max/ghaction-import-gpg@v6.1.0
         with:
           gpg_private_key: ${{ secrets.CONDUKTOR_BOT_GPG_PRIVATE_KEY }}
           git_user_signingkey: true
