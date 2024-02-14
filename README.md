@@ -8,7 +8,7 @@ We've decided to open-source it for educational purposes only; it is not meant t
 This POC demonstrates how to transform Kafka requests and responses between clients and Apache Kafka.
 In particular, we wanted to demonstrate how to encrypt/decrypt data on the fly and add any kind of transformations to the records.
 
-This POC was the premise of our product called Conduktor Gateway, you can find its [documentation here](https://docs.conduktor.io/gateway/). As this is quite a technical product, we recommend you book a demo with us. We'll be happy to help you and your team get started with the best practices and the best setup for your use case.
+> This POC was the premise of our product called Conduktor Gateway. You can find its [documentation here](https://docs.conduktor.io/gateway/). As this is quite a technical product, we recommend you book a demo with us. We'll be happy to help you and your team get started with the best practices and the best setup for your use case.
 
 We do not really accept contributions as it was just a POC. There is no effort on our side to maintain it.
 
@@ -73,6 +73,10 @@ interceptors:
 ```
 
 - Change your applications to point to `localhost:6969` and see how the impact!
+
+# It's a POC
+
+This POC was the premise of our product called Conduktor Gateway. You can find its [documentation here](https://docs.conduktor.io/gateway/). As this is quite a technical product, we recommend you book a demo with us. We'll be happy to help you and your team get started with the best practices and the best setup for your use case.
 
 # License
 
