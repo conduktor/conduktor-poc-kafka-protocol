@@ -30,16 +30,25 @@ kafkaSelector:
   type: file
   path: config/kafka.config 
 
-hostPortConfiguration:
-  gatewayBindHost: 0.0.0.0
-  gatewayHost: localhost
-  portRange: 6969:6975
+interceptors:
+- name: loggingInterceptor
+  pluginClass: io.conduktor.example.loggerinterceptor.LoggerInterceptorPlugin
+  timeoutMs: 30000
+  priority: 100
+  config:
+    - key: "loggingStyle"
+      value: "obiWan"
 
-authenticationConfig:
-  authenticatorType: NONE
-  exponentialBackoff:
-    multiplier: 2
-    backoffMaxMs: 5000
+#hostPortConfiguration:
+#  gatewayBindHost: 0.0.0.0
+#  gatewayHost: localhost
+#  portRange: 6969:6975
+
+#authenticationConfig:
+#  authenticatorType: NONE
+#  exponentialBackoff:
+#    multiplier: 2
+#    backoffMaxMs: 5000
 #  sslConfig:
 #    updateContextIntervalMinutes: 5
 #    keyStore:
@@ -49,27 +58,18 @@ authenticationConfig:
 #      keyStoreType: jks
 #      updateIntervalMsecs: 600000
 
-threadConfig:
-  downStreamThread: 2
-  upstream:
-    numberOfThread: 2
-    maxPendingTask: 2048
+#threadConfig:
+#  downStreamThread: 2
+#  upstream:
+#    numberOfThread: 2
+#    maxPendingTask: 2048
 
-maxResponseLatency: 3000
-inFlightRequestExpiryMs: 30000
+#maxResponseLatency: 3000
+#inFlightRequestExpiryMs: 30000
 
-upstreamConnectionConfig:
-  numOfConnection: 10
-  maxIdleTimeMs: 200000
-
-interceptors:
-- name: loggingInterceptor
-  pluginClass: io.conduktor.example.loggerinterceptor.LoggerInterceptorPlugin
-  timeoutMs: 30000
-  priority: 100
-  config:
-    - key: "loggingStyle"
-      value: "obiWan"
+#upstreamConnectionConfig:
+#  numOfConnection: 10
+#  maxIdleTimeMs: 200000
 ```
 
 - Change your applications to point to `localhost:6969` and see how the impact!
