@@ -72,8 +72,8 @@ interceptors:
 #  maxIdleTimeMs: 200000
 ```
 
-- Change your applications to point to `localhost:6969` and see how the impact!
-- You can now add any capabilities like encryption and reference it in the `interceptors` list.
+- Change your applications to point to `localhost:6969` and see the traffic flowing!
+- Add capabilities like encryption and reference it in the `interceptors` list.
 
 # It's a POC
 
