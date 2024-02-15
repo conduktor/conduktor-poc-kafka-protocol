@@ -1,7 +1,6 @@
 <img src="https://www.conduktor.io/svgs/logo/black.svg" width="256">
 
-This is an internal technical POC to demonstrate how to bend the Kafka protocol to encrypt/decrypt data.
-We've decided to open-source it for educational purposes only; it is not meant to be used, especially not in production.
+This internal technical POC demonstrates how to work with the Kafka protocol to alter incoming/outgoing records. Our original aim was to understand how to encrypt or validate data. This POC only contain the capability to log what is happening at the protocol level, but it's extensible. We've decided to open-source it for educational purposes only; it is not meant to be used, especially not in production.
 
 # Why?
 
