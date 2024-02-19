@@ -13,7 +13,7 @@
         <bouncycastle.version>1.70</bouncycastle.version>
         <openapi-generator-version>6.3.0</openapi-generator-version>
         <vertx.version>4.4.5</vertx.version>
-        <micrometer.version>1.11.3</micrometer.version>
+        <micrometer.version>1.12.3</micrometer.version>
         <netty.version>4.1.99.Final</netty.version>
         <jackson.version>2.15.2</jackson.version>
         <grafana.jpprof.version>0.1.6</grafana.jpprof.version>
